@@ -1,4 +1,4 @@
-package engine;
+package model;
 
 /**
  * Created by an unknown Java student on 11/3/14.
