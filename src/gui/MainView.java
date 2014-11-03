@@ -15,11 +15,13 @@ import java.awt.event.WindowEvent;
 public class MainView extends JFrame
 {
    private static final int VIEW_WIDTH = 800;
-   private static final int VIEW_HEIGHT = 560;
+   private static final int VIEW_HEIGHT = 540;
    private boolean isLocal = false;
    private MainMenuBar menuBar = null;
    private MainStatusBar statusBar = null;
    private GameBoardView gameBoardView = null;
+   private FleedView myFleedView = null;
+   private FleedView enemyFleedView = null;
 
    public MainView()
    {
@@ -34,8 +36,11 @@ public class MainView extends JFrame
 
    private void setupMainView()
    {
+      myFleedView = GameContext.myFleedView;//new FleedView(false);
+      enemyFleedView = GameContext.enemyFleedView;//new FleedView(true);
+
       menuBar = new MainMenuBar();
-      gameBoardView = new GameBoardView();
+      gameBoardView = new GameBoardView(myFleedView, enemyFleedView);
       statusBar = new MainStatusBar();
 
       setJMenuBar(menuBar);

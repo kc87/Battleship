@@ -1,39 +1,175 @@
 package gui;
 
-import model.Sea;
+import model.Fleed;
+import model.SeaArea;
+import model.Ship;
+import org.pmw.tinylog.Logger;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * Created by an unknown Java student on 11/3/14.
  */
 public class FleedView extends JPanel
 {
-   public static final Border SHIP_BORDER = BorderFactory.createLineBorder(new Color(0, 0, 0), 3);
-   public static final Border WATER_BORDER = BorderFactory.createLineBorder(new Color(66, 66, 166), 1);
-   public static final Border DESTROYED_BORDER = BorderFactory.createLineBorder(new Color(166, 166, 166), 1);
+   private static final String MY_TITLE = "My Fleed";
+   private static final String ENEMY_TITLE = "Enemy Fleed";
+   private static final String[] ALPHA_SCALE = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J"};
+   private static final int DIM = SeaArea.DIM;
+   private static final int GRID_SIZE = 380;
 
-   public static final Color WATER_COLOR = new Color(100, 100, 255);
-   public static final Color HIT_COLOR = new Color(250, 50, 50);
-   public static final Color EMPTY_COLOR = new Color(188, 188, 188);
-   public static final Color DESTROYED_COLOR = new Color(166, 166, 166);
-   public static final Color SHIP_COLOR = new Color(0, 0, 0);
+   protected JPanel nNumberScale;
+   protected JPanel sNumberScale;
+   protected JPanel eAlphaScale;
+   protected JPanel wAlphaScale;
+   protected JPanel seaGridPanel;
 
-   protected JPanel nPanel, sPanel, ePanel, wPanel, gridPanel;
+   private boolean isEnemy = false;
 
-   protected SeaGridButton[][] gridButtons = new SeaGridButton[Sea.DIM][Sea.DIM];
-   //public int[][] gridArray = new int[(DIM+2)][(DIM+2)];
+   protected SeaGridButton[][] gridButtons = new SeaGridButton[DIM][DIM];
+   //private Color fillColor;
 
-   private TitledBorder panelTitleBorder;
-
-
-   public FleedView(final String title)
+   public FleedView(final boolean isEnemy)
    {
+      this.isEnemy = isEnemy;
+      setupFleedView();
+   }
 
+   public void updateView(final Fleed fleedModel)
+   {
+      for (int j = 0; j < DIM; j++) {
+         for (int i = 0; i < DIM; i++) {
+
+            int gridValue = fleedModel.getSeaGrid()[i + 1][j + 1];
+
+            if (gridValue > 0) {
+
+               Ship ship = fleedModel.getShips()[gridValue - 1];
+
+               gridButtons[i][j].setBackground(new Color(0, 0, 0));
+               gridButtons[i][j].setBorder(Const.SHIP_BORDER);
+               gridButtons[i][j].setText("" + ship.getSize());
+            } else {
+               gridButtons[i][j].setBackground(isEnemy ? Const.EMPTY_COLOR : Const.WATER_COLOR);
+               gridButtons[i][j].setBorder(Const.WATER_BORDER);
+               gridButtons[i][j].setText("");
+            }
+         }
+      }
 
    }
+
+   public void resetSeaGrid()
+   {
+      for (int j = 0; j < DIM; j++) {
+         for (int i = 0; i < DIM; i++) {
+            gridButtons[i][j].setBackground(isEnemy ? Const.EMPTY_COLOR : Const.WATER_COLOR);
+            gridButtons[i][j].setBorder(Const.WATER_BORDER);
+            gridButtons[i][j].setText("");
+         }
+      }
+   }
+
+
+   private void setupFleedView()
+   {
+      TitledBorder panelTitleBorder = BorderFactory.createTitledBorder(Const.PANEL_BORDER,
+              (isEnemy ? ENEMY_TITLE : MY_TITLE), TitledBorder.CENTER, TitledBorder.TOP);
+      setLayout(new BorderLayout());
+      setPreferredSize(new Dimension(GRID_SIZE, GRID_SIZE));
+      setBorder(panelTitleBorder);
+      createSeaGrid();
+      resetSeaGrid();
+   }
+
+
+   private void createSeaGrid()
+   {
+      GridButtonHandler gridButtonHandler = null;
+      seaGridPanel = new JPanel(new GridLayout(DIM, DIM, 0, 0));
+      gridButtons = new SeaGridButton[DIM][DIM];
+
+      if (isEnemy) {
+         gridButtonHandler = new GridButtonHandler();
+      }
+
+      for (int j = 0; j < DIM; j++) {
+         for (int i = 0; i < DIM; i++) {
+            gridButtons[i][j] = new SeaGridButton(j * DIM + i);
+            if (isEnemy) {
+               gridButtons[i][j].addActionListener(gridButtonHandler);
+            }
+            seaGridPanel.add(gridButtons[i][j]);
+         }
+      }
+
+      nNumberScale = new JPanel(new GridLayout(1, DIM + 2, 0, 0));
+      sNumberScale = new JPanel(new GridLayout(1, DIM + 2, 0, 0));
+      eAlphaScale = new JPanel(new GridLayout(DIM, 1, 0, 0));
+      wAlphaScale = new JPanel(new GridLayout(DIM, 1, 0, 0));
+
+      nNumberScale.setPreferredSize(new Dimension(GRID_SIZE, 30));
+      sNumberScale.setPreferredSize(new Dimension(GRID_SIZE, 30));
+      eAlphaScale.setPreferredSize(new Dimension(30, GRID_SIZE));
+      wAlphaScale.setPreferredSize(new Dimension(30, GRID_SIZE));
+
+      Font scaleFont = new Font("SanSerif", Font.BOLD, 12);
+
+      for (int i = 0; i < DIM + 2; i++) {
+         JLabel l;
+         l = new JLabel("", SwingConstants.CENTER);
+         l.setFont(scaleFont);
+         if (i > 0 && i < DIM + 1)
+            l.setText(i + "");
+         nNumberScale.add(l);
+         l = new JLabel("", SwingConstants.CENTER);
+         l.setFont(scaleFont);
+         if (i > 0 && i < DIM + 1)
+            l.setText(i + "");
+         sNumberScale.add(l);
+
+         if (i > 0 && i < DIM + 1) {
+            l = new JLabel(ALPHA_SCALE[i - 1], SwingConstants.CENTER);
+            l.setFont(scaleFont);
+            eAlphaScale.add(l);
+            l = new JLabel(ALPHA_SCALE[i - 1], SwingConstants.CENTER);
+            l.setFont(scaleFont);
+            wAlphaScale.add(l);
+         }
+      }
+
+      add(nNumberScale, BorderLayout.NORTH);
+      add(eAlphaScale, BorderLayout.EAST);
+      add(seaGridPanel, BorderLayout.CENTER);
+      add(wAlphaScale, BorderLayout.WEST);
+      add(sNumberScale, BorderLayout.SOUTH);
+   }
+
+   public interface Listener
+   {
+      public void updateView(final Fleed fleedModel);
+   }
+
+   private class GridButtonHandler implements ActionListener
+   {
+      @Override
+      public void actionPerformed(ActionEvent e)
+      {
+         String cmd = e.getActionCommand();
+         int buttonIndex = Integer.parseInt(cmd);
+
+         int i = (int) buttonIndex % SeaArea.DIM;
+         int j = (int) buttonIndex / SeaArea.DIM;
+
+         Logger.debug("Button {0},{1} clicked", i, j);
+
+
+      }
+   }
+
 
 }

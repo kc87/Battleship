@@ -13,13 +13,13 @@ public class GameBoardView extends JPanel
    private static final Border PANEL_BORDER = BorderFactory.createLineBorder(new Color(0, 0, 0), 2);
    private JPanel msgPanel = null;
 
-   public GameBoardView()
+   public GameBoardView(final FleedView myFleed, final FleedView enemyFleed)
    {
-      setupGameBoard();
+      setupGameBoard(myFleed, enemyFleed);
    }
 
 
-   private void setupGameBoard()
+   private void setupGameBoard(final FleedView myFleed, final FleedView enemyFleed)
    {
       setLayout(new BorderLayout());
 
@@ -28,7 +28,8 @@ public class GameBoardView extends JPanel
       msgPanel.setBorder(BorderFactory.createTitledBorder(PANEL_BORDER, "Message Board", TitledBorder.CENTER, TitledBorder.TOP));
 
       add(msgPanel, BorderLayout.NORTH);
-
+      add(myFleed, BorderLayout.WEST);
+      add(enemyFleed, BorderLayout.EAST);
    }
 
 
