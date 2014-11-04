@@ -47,7 +47,7 @@ public class NetController
                recvSocket.setSoTimeout(500);
                //recvSocket.setReuseAddress(true);
                InetSocketAddress bindAddress = (GameContext.localBindAddress != null) ?
-                     new InetSocketAddress(GameContext.localBindAddress, PORT) : new InetSocketAddress(PORT);
+                       new InetSocketAddress(GameContext.localBindAddress, PORT) : new InetSocketAddress(PORT);
                recvSocket.bind(bindAddress);
             } catch (SocketException e) {
                Logger.error(e);
@@ -113,7 +113,7 @@ public class NetController
             try {
                byte[] pktData = gson.toJson(message).getBytes("UTF-8");
                DatagramPacket packet = new DatagramPacket(pktData, pktData.length,
-                     InetAddress.getByName(peerAddress), PORT);
+                       InetAddress.getByName(peerAddress), PORT);
                sendSocket.send(packet);
             } catch (IOException e) {
                Logger.error(e);
@@ -129,6 +129,7 @@ public class NetController
 
       try {
          jsonMsg = jsonMsg.trim();
+         Logger.debug("Recv.:" + jsonMsg + " peerId:" + peerId);
          Message newMsg = gson.fromJson(jsonMsg, Message.class);
          listener.onMessage(newMsg, peerId);
       } catch (JsonSyntaxException e) {

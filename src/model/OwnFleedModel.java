@@ -24,8 +24,8 @@ public class OwnFleedModel extends AbstractFleedModel
    public void placeNewFleed()
    {
       while (createFleet() < NUMBER_OF_SHIPS) ;
-      //listener.updateView(this);
-      GameContext.myFleedView.updateView(this);
+      //listener.onUpdate(this);
+      //GameContext.myFleedView.updateView(this);
    }
 
    private int createFleet()

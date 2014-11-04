@@ -64,13 +64,20 @@ public class MainMenuBar extends JMenuBar
       @Override
       public void actionPerformed(ActionEvent e)
       {
-         Logger.debug(e.getActionCommand());
          final String cmd = e.getActionCommand();
 
          switch (cmd) {
+            case ActionCmd.CONNECT_PEER_CMD:
+               GameEngine.getInstance().connectPeer();
+               break;
+            case ActionCmd.DISCONNECT_PEER_CMD:
+               GameEngine.getInstance().disconnectPeer();
+               break;
             case ActionCmd.NEW_GAME_CMD:
-               //GameContext.ownFleedModel.placeNewFleed();
-               GameEngine.getInstance().setState(null);
+               GameEngine.getInstance().newGame();
+               break;
+            case ActionCmd.ABORT_GAME_CMD:
+               GameEngine.getInstance().abortGame();
                break;
             case ActionCmd.QUIT_APP_CMD:
                Main.quitApplication();

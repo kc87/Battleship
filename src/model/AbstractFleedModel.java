@@ -39,7 +39,7 @@ public abstract class AbstractFleedModel
 
    public interface Listener
    {
-      public void onUpdate();
+      public void onUpdate(final AbstractFleedModel model);
    }
 
 }

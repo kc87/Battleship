@@ -14,7 +14,7 @@ public class Main
    public static void startApplication()
    {
       GameContext.localBindAddress = Dialogs.requestLocalBindIp();
-      GameEngine.getInstance().start();
+      GameEngine.getInstance().startNetReveiver();
 
       javax.swing.SwingUtilities.invokeLater(new Runnable()
       {
@@ -31,7 +31,7 @@ public class Main
    {
       if (Dialogs.confirmQuittingGame()) {
          Logger.debug("Closing main window and exit.");
-         GameEngine.getInstance().stop();
+         GameEngine.getInstance().stopNetReceiver();
          GameContext.mainView.dispose();
          System.exit(0);
       }
