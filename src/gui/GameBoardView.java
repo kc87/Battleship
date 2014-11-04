@@ -1,5 +1,7 @@
 package gui;
 
+import main.GameContext;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
@@ -13,13 +15,13 @@ public class GameBoardView extends JPanel
    private static final Border PANEL_BORDER = BorderFactory.createLineBorder(new Color(0, 0, 0), 2);
    private JPanel msgPanel = null;
 
-   public GameBoardView(final FleedView myFleed, final FleedView enemyFleed)
+   public GameBoardView(/*final FleedView ownFleedModel, final FleedView enemyFleedModel*/)
    {
-      setupGameBoard(myFleed, enemyFleed);
+      setupGameBoard(/*ownFleedModel, enemyFleedModel*/);
    }
 
 
-   private void setupGameBoard(final FleedView myFleed, final FleedView enemyFleed)
+   private void setupGameBoard(/*final FleedView ownFleedModel, final FleedView enemyFleedModel*/)
    {
       setLayout(new BorderLayout());
 
@@ -28,8 +30,8 @@ public class GameBoardView extends JPanel
       msgPanel.setBorder(BorderFactory.createTitledBorder(PANEL_BORDER, "Message Board", TitledBorder.CENTER, TitledBorder.TOP));
 
       add(msgPanel, BorderLayout.NORTH);
-      add(myFleed, BorderLayout.WEST);
-      add(enemyFleed, BorderLayout.EAST);
+      add(GameContext.myFleedView, BorderLayout.WEST);
+      add(GameContext.enemyFleedView, BorderLayout.EAST);
    }
 
 

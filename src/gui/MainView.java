@@ -15,32 +15,24 @@ import java.awt.event.WindowEvent;
 public class MainView extends JFrame
 {
    private static final int VIEW_WIDTH = 800;
-   private static final int VIEW_HEIGHT = 540;
-   private boolean isLocal = false;
+   private static final int VIEW_HEIGHT = 520;
    private MainMenuBar menuBar = null;
    private MainStatusBar statusBar = null;
    private GameBoardView gameBoardView = null;
-   private FleedView myFleedView = null;
-   private FleedView enemyFleedView = null;
 
-   public MainView()
+   public MainView(final String localIp)
    {
-      setTitle(GameContext.TITLE + " v" + GameContext.VERSION);
+      setTitle(GameContext.TITLE + " v" + GameContext.VERSION + localIp);
       setSize(VIEW_WIDTH, VIEW_HEIGHT);
       setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
       setupMainView();
-      //askIsLocal();
-      setVisible(true);
    }
 
 
    private void setupMainView()
    {
-      myFleedView = GameContext.myFleedView;//new FleedView(false);
-      enemyFleedView = GameContext.enemyFleedView;//new FleedView(true);
-
       menuBar = new MainMenuBar();
-      gameBoardView = new GameBoardView(myFleedView, enemyFleedView);
+      gameBoardView = new GameBoardView();
       statusBar = new MainStatusBar();
 
       setJMenuBar(menuBar);
@@ -53,13 +45,7 @@ public class MainView extends JFrame
          @Override
          public void windowClosing(WindowEvent e)
          {
-            Logger.debug("Closing main window and exit.");
-
-            int option = JOptionPane.showConfirmDialog(null, "Quit Game?");
-            if (option == JOptionPane.OK_OPTION) {
-               dispose();
-               System.exit(0);
-            }
+            Main.quitApplication();
          }
       });
    }
@@ -77,29 +63,5 @@ public class MainView extends JFrame
 
    }
 
-   /**
-    * For testing only!
-    */
-   private void askIsLocal()
-   {
-      String lastOctet = JOptionPane.showInputDialog(null, "Choose unique client number [1..254]:",
-              "Start as local only client?", JOptionPane.QUESTION_MESSAGE);
-
-      if (lastOctet != null) {
-
-         try {
-            int octet = Integer.parseInt(lastOctet);
-            if (octet > 254 || octet < 1) {
-               return;
-            }
-         } catch (NumberFormatException e) {
-            return;
-         }
-
-         GameContext.localBindAddress = "127.0.0." + lastOctet;
-         setTitle(getTitle() + " [" + GameContext.localBindAddress + "]");
-         isLocal = true;
-      }
-   }
 
 }

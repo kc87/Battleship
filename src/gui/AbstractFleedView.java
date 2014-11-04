@@ -1,67 +1,44 @@
 package gui;
 
-import model.Fleed;
+import model.AbstractFleedModel;
 import model.SeaArea;
-import model.Ship;
-import org.pmw.tinylog.Logger;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * Created by an unknown Java student on 11/3/14.
  */
-public class FleedView extends JPanel
+public abstract class AbstractFleedView extends JPanel
 {
+   private static final String[] ALPHA_SCALE = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J"};
    private static final String MY_TITLE = "My Fleed";
    private static final String ENEMY_TITLE = "Enemy Fleed";
-   private static final String[] ALPHA_SCALE = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J"};
-   private static final int DIM = SeaArea.DIM;
+   //private static final int DIM = SeaArea.DIM;
    private static final int GRID_SIZE = 380;
 
-   protected JPanel nNumberScale;
-   protected JPanel sNumberScale;
-   protected JPanel eAlphaScale;
-   protected JPanel wAlphaScale;
-   protected JPanel seaGridPanel;
+   private JPanel nNumberScale;
+   private JPanel sNumberScale;
+   private JPanel eAlphaScale;
+   private JPanel wAlphaScale;
 
+   private GridButtonHandler gridButtonHandler = null;
    private boolean isEnemy = false;
 
+   protected static final int DIM = SeaArea.DIM;
+   protected JPanel seaGridPanel;
    protected SeaGridButton[][] gridButtons = new SeaGridButton[DIM][DIM];
-   //private Color fillColor;
 
-   public FleedView(final boolean isEnemy)
+   public AbstractFleedView(final GridButtonHandler gridButtonHandler)
    {
-      this.isEnemy = isEnemy;
+      this.gridButtonHandler = gridButtonHandler;
+      this.isEnemy = (gridButtonHandler != null);
+
       setupFleedView();
    }
 
-   public void updateView(final Fleed fleedModel)
-   {
-      for (int j = 0; j < DIM; j++) {
-         for (int i = 0; i < DIM; i++) {
-
-            int gridValue = fleedModel.getSeaGrid()[i + 1][j + 1];
-
-            if (gridValue > 0) {
-
-               Ship ship = fleedModel.getShips()[gridValue - 1];
-
-               gridButtons[i][j].setBackground(new Color(0, 0, 0));
-               gridButtons[i][j].setBorder(Const.SHIP_BORDER);
-               gridButtons[i][j].setText("" + ship.getSize());
-            } else {
-               gridButtons[i][j].setBackground(isEnemy ? Const.EMPTY_COLOR : Const.WATER_COLOR);
-               gridButtons[i][j].setBorder(Const.WATER_BORDER);
-               gridButtons[i][j].setText("");
-            }
-         }
-      }
-
-   }
+   public abstract void updateView(final AbstractFleedModel fleedModel);
 
    public void resetSeaGrid()
    {
@@ -78,7 +55,7 @@ public class FleedView extends JPanel
    private void setupFleedView()
    {
       TitledBorder panelTitleBorder = BorderFactory.createTitledBorder(Const.PANEL_BORDER,
-              (isEnemy ? ENEMY_TITLE : MY_TITLE), TitledBorder.CENTER, TitledBorder.TOP);
+            (isEnemy ? ENEMY_TITLE : MY_TITLE), TitledBorder.CENTER, TitledBorder.TOP);
       setLayout(new BorderLayout());
       setPreferredSize(new Dimension(GRID_SIZE, GRID_SIZE));
       setBorder(panelTitleBorder);
@@ -89,20 +66,13 @@ public class FleedView extends JPanel
 
    private void createSeaGrid()
    {
-      GridButtonHandler gridButtonHandler = null;
       seaGridPanel = new JPanel(new GridLayout(DIM, DIM, 0, 0));
       gridButtons = new SeaGridButton[DIM][DIM];
-
-      if (isEnemy) {
-         gridButtonHandler = new GridButtonHandler();
-      }
 
       for (int j = 0; j < DIM; j++) {
          for (int i = 0; i < DIM; i++) {
             gridButtons[i][j] = new SeaGridButton(j * DIM + i);
-            if (isEnemy) {
-               gridButtons[i][j].addActionListener(gridButtonHandler);
-            }
+            gridButtons[i][j].addActionListener(gridButtonHandler);
             seaGridPanel.add(gridButtons[i][j]);
          }
       }
@@ -147,28 +117,6 @@ public class FleedView extends JPanel
       add(seaGridPanel, BorderLayout.CENTER);
       add(wAlphaScale, BorderLayout.WEST);
       add(sNumberScale, BorderLayout.SOUTH);
-   }
-
-   public interface Listener
-   {
-      public void updateView(final Fleed fleedModel);
-   }
-
-   private class GridButtonHandler implements ActionListener
-   {
-      @Override
-      public void actionPerformed(ActionEvent e)
-      {
-         String cmd = e.getActionCommand();
-         int buttonIndex = Integer.parseInt(cmd);
-
-         int i = (int) buttonIndex % SeaArea.DIM;
-         int j = (int) buttonIndex / SeaArea.DIM;
-
-         Logger.debug("Button {0},{1} clicked", i, j);
-
-
-      }
    }
 
 

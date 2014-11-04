@@ -1,6 +1,8 @@
 package gui;
 
+import controller.GameEngine;
 import main.GameContext;
+import main.Main;
 import org.pmw.tinylog.Logger;
 
 import javax.swing.*;
@@ -10,7 +12,7 @@ import java.awt.event.ActionListener;
 /**
  * Created by citizen4 on 03.11.2014.
  */
-public class MainMenuBar extends JMenuBar /*implements FleedView.Listener*/
+public class MainMenuBar extends JMenuBar
 {
    private static final String MENU_NAME = "Game";
 
@@ -19,7 +21,6 @@ public class MainMenuBar extends JMenuBar /*implements FleedView.Listener*/
    private JMenuItem newGameItem = null;
    private JMenuItem abortGameItem = null;
    private JMenuItem quitGameItem = null;
-   private FleedView myFleedView = null;
 
    public MainMenuBar()
    {
@@ -42,8 +43,10 @@ public class MainMenuBar extends JMenuBar /*implements FleedView.Listener*/
       newGameItem.addActionListener(menuAction);
       abortGameItem = new JMenuItem("Abort Game");
       abortGameItem.setActionCommand(ActionCmd.ABORT_GAME_CMD);
+      abortGameItem.addActionListener(menuAction);
       quitGameItem = new JMenuItem("Quit");
       quitGameItem.setActionCommand(ActionCmd.QUIT_APP_CMD);
+      quitGameItem.addActionListener(menuAction);
 
       gameMenu.add(connectItem);
       gameMenu.add(disconnectItem);
@@ -66,7 +69,11 @@ public class MainMenuBar extends JMenuBar /*implements FleedView.Listener*/
 
          switch (cmd) {
             case ActionCmd.NEW_GAME_CMD:
-               GameContext.myFleed.placeNewFleed();
+               //GameContext.ownFleedModel.placeNewFleed();
+               GameEngine.getInstance().setState(null);
+               break;
+            case ActionCmd.QUIT_APP_CMD:
+               Main.quitApplication();
                break;
          }
       }

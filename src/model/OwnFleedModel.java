@@ -1,6 +1,5 @@
 package model;
 
-import gui.FleedView;
 import main.GameContext;
 
 import java.util.Arrays;
@@ -8,33 +7,18 @@ import java.util.Arrays;
 /**
  * Created by an unknown Java student on 11/3/14.
  */
-public class Fleed
+public class OwnFleedModel extends AbstractFleedModel
 {
-   public static final int NUMBER_OF_SHIPS = 10;
-   private static final int DIM = SeaArea.DIM;
-   //private FleedView.Listener listener;
-   private int[][] seaGrid = new int[(DIM + 2)][(DIM + 2)];
-   private Ship[] ships = new Ship[NUMBER_OF_SHIPS];
 
-   public Fleed(/*final FleedView.Listener listener*/)
+   public OwnFleedModel()
    {
-      //this.listener = listener;
+      super(null);
    }
 
-   public int[][] getSeaGrid()
-   {
-      return seaGrid;
-   }
-
-   public Ship[] getShips()
-   {
-      return ships;
-   }
-
+   @Override
    public void updateModel()
    {
 
-      //updateView();
    }
 
    public void placeNewFleed()
@@ -49,9 +33,7 @@ public class Fleed
       int i = 0, k = 0;
       int[] shipTypes = {5, 2, 3, 4, 2, 4, 2, 3, 2, 3};
 
-      for (int[] row : seaGrid) {
-         Arrays.fill(row, 0);
-      }
+      reset();
 
       while (i < NUMBER_OF_SHIPS && k++ < 10000) {
          int si = 1 + (int) (DIM * Math.random());
