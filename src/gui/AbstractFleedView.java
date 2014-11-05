@@ -10,7 +10,7 @@ import java.awt.*;
 /**
  * Created by an unknown Java student on 11/3/14.
  */
-public abstract class AbstractFleedView extends JPanel
+public abstract class AbstractFleedView extends JPanel implements AbstractFleedModel.ModelUpdateListener
 {
    private static final String[] ALPHA_SCALE = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J"};
    private static final String MY_TITLE = "My Fleed";
@@ -41,6 +41,29 @@ public abstract class AbstractFleedView extends JPanel
 
    public abstract void updatePartialView(final AbstractFleedModel fleedModel, final int i, final int j);
 
+   @Override
+   public void onPartialUpdate(final AbstractFleedModel model, final int i, final int j, final int flag)
+   {
+      if (flag != AbstractFleedModel.AGAIN) {
+         if (flag == AbstractFleedModel.MISS || flag == AbstractFleedModel.HIT) {
+            updatePartialView(model, i, j);
+         } else {
+            //updateTotalView(model);
+            onTotalUpdate(model);
+         }
+      }
+   }
+
+   @Override
+   public void onTotalUpdate(final AbstractFleedModel model)
+   {
+      //updateTotalView(model);
+      for (int j = 0; j < DIM; j++) {
+         for (int i = 0; i < DIM; i++) {
+            updatePartialView(model, i, j);
+         }
+      }
+   }
 
    // Override swing method because default impl. is rather useless!!
    @Override
@@ -58,6 +81,7 @@ public abstract class AbstractFleedView extends JPanel
       isEnabled = enable;
    }
 
+   /*
    public void updateTotalView(final AbstractFleedModel fleedModel)
    {
       for (int j = 0; j < DIM; j++) {
@@ -65,7 +89,7 @@ public abstract class AbstractFleedView extends JPanel
             updatePartialView(fleedModel, i, j);
          }
       }
-   }
+   }*/
 
    public void resetSeaGrid()
    {
@@ -121,27 +145,25 @@ public abstract class AbstractFleedView extends JPanel
       eAlphaScale.setPreferredSize(new Dimension(30, GRID_SIZE));
       wAlphaScale.setPreferredSize(new Dimension(30, GRID_SIZE));
 
-      Font scaleFont = new Font("SanSerif", Font.BOLD, 12);
-
       for (int i = 0; i < DIM + 2; i++) {
          JLabel l;
          l = new JLabel("", SwingConstants.CENTER);
-         l.setFont(scaleFont);
+         l.setFont(Const.SCALE_FONT);
          if (i > 0 && i < DIM + 1)
             l.setText(i + "");
          nNumberScale.add(l);
          l = new JLabel("", SwingConstants.CENTER);
-         l.setFont(scaleFont);
+         l.setFont(Const.SCALE_FONT);
          if (i > 0 && i < DIM + 1)
             l.setText(i + "");
          sNumberScale.add(l);
 
          if (i > 0 && i < DIM + 1) {
             l = new JLabel(ALPHA_SCALE[i - 1], SwingConstants.CENTER);
-            l.setFont(scaleFont);
+            l.setFont(Const.SCALE_FONT);
             eAlphaScale.add(l);
             l = new JLabel(ALPHA_SCALE[i - 1], SwingConstants.CENTER);
-            l.setFont(scaleFont);
+            l.setFont(Const.SCALE_FONT);
             wAlphaScale.add(l);
          }
       }

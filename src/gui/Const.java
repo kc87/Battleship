@@ -11,7 +11,12 @@ public final class Const
 {
    public static final String DEAD_SYMBOL = "\u2620";
 
+   public static final Font GRID_BUTTON_FONT = new Font("SanSerif", Font.PLAIN, 18);
+   public static final Font SCALE_FONT = new Font("SanSerif", Font.BOLD, 14);
+   public static final Font MESSAGE_BOARD_FONT = new Font("SanSerif", Font.BOLD, 24);
+
    public static final Border PANEL_BORDER = BorderFactory.createLineBorder(new Color(0, 0, 0), 2);
+   public static final Border SCORE_BOARD_BORDER = BorderFactory.createLineBorder(new Color(0, 0, 0), 2);
    public static final Border SHIP_BORDER = BorderFactory.createLineBorder(new Color(0, 0, 0), 1);
    public static final Border WATER_BORDER = BorderFactory.createLineBorder(new Color(66, 66, 255), 1);
    public static final Border HIT_BORDER = BorderFactory.createLineBorder(new Color(240, 0, 0), 1);

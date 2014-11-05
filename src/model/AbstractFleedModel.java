@@ -17,11 +17,16 @@ public abstract class AbstractFleedModel
    protected int[][] seaGrid = new int[(DIM + 2)][(DIM + 2)];
    protected Ship[] ships = new Ship[NUMBER_OF_SHIPS];
    protected int shipsDestroyed = 0;
-   protected Listener listener = null;
+   protected ModelUpdateListener listener = null;
 
-   public AbstractFleedModel(final Listener listener)
+   public AbstractFleedModel(final ModelUpdateListener listener)
    {
       this.listener = listener;
+   }
+
+   public int getShipsLeft()
+   {
+      return NUMBER_OF_SHIPS - shipsDestroyed;
    }
 
    public boolean isFleedDestroyed()
@@ -45,9 +50,11 @@ public abstract class AbstractFleedModel
       ships = new Ship[NUMBER_OF_SHIPS];
    }
 
-   public interface Listener
+   public interface ModelUpdateListener
    {
-      public void onUpdate(final AbstractFleedModel model);
+      public void onTotalUpdate(final AbstractFleedModel model);
+
+      public void onPartialUpdate(final AbstractFleedModel model, final int i, final int j, final int flag);
    }
 
 }

@@ -7,9 +7,10 @@ import org.pmw.tinylog.Logger;
  */
 public class EnemyFleedModel extends AbstractFleedModel
 {
-   public EnemyFleedModel()
+   public EnemyFleedModel(final ModelUpdateListener updateListener)
    {
-      super(null);
+      super(updateListener);
+      listener.onTotalUpdate(this);
    }
 
    //@Override
@@ -23,8 +24,10 @@ public class EnemyFleedModel extends AbstractFleedModel
             ix += (ship.getDir() == 0) ? 1 : 0;
             jy += (ship.getDir() != 0) ? 1 : 0;
          }
+         listener.onTotalUpdate(this);
       } else {
          seaGrid[i + 1][j + 1] = resultFlag;
+         listener.onPartialUpdate(this, i, j, resultFlag);
       }
    }
 }

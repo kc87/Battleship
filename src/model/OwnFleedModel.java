@@ -11,9 +11,10 @@ import java.util.Arrays;
 public class OwnFleedModel extends AbstractFleedModel
 {
 
-   public OwnFleedModel()
+   public OwnFleedModel(final ModelUpdateListener updateListener)
    {
-      super(null);
+      super(updateListener);
+      placeNewFleed();
    }
 
    //@Override
@@ -31,11 +32,12 @@ public class OwnFleedModel extends AbstractFleedModel
       if (gridValue > 0 && gridValue < NUMBER_OF_SHIPS + 1) {
          Ship ship = ships[gridValue - 1];
 
-         // No need to wast bombs
+         // No need to wast bombs ;)
          if (ship.isDestroyed()) {
             return new Object[]{AGAIN, null};
          }
 
+         //beng beng:
          ship.hit();
 
          if (ship.isDestroyed()) {
@@ -45,21 +47,24 @@ public class OwnFleedModel extends AbstractFleedModel
                ix += (ship.getDir() == 0) ? 1 : 0;
                jy += (ship.getDir() != 0) ? 1 : 0;
             }
+            listener.onTotalUpdate(this);
             return new Object[]{DESTROYED, ship};
          } else {
             seaGrid[i + 1][j + 1] = -gridValue;
+            listener.onPartialUpdate(this, i, j, AbstractFleedModel.HIT);
             return new Object[]{HIT, null};
          }
       }
 
       seaGrid[i + 1][j + 1] = AbstractFleedModel.MISS;
-
+      listener.onPartialUpdate(this, i, j, AbstractFleedModel.MISS);
       return new Object[]{MISS, null};
    }
 
-   public void placeNewFleed()
+   private void placeNewFleed()
    {
       while (createFleet() < NUMBER_OF_SHIPS) ;
+      listener.onTotalUpdate(this);
    }
 
    private int createFleet()

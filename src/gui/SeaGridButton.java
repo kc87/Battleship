@@ -12,11 +12,10 @@ public class SeaGridButton extends JButton
 
    public SeaGridButton(final int index)
    {
-      this.setPreferredSize(new Dimension(SIZE, SIZE));
-      this.setFocusPainted(false);
-      this.setActionCommand("" + index/*+","+player*/);
-
-
+      setPreferredSize(new Dimension(SIZE, SIZE));
+      setFocusPainted(false);
+      setActionCommand("" + index);
+      setFont(Const.GRID_BUTTON_FONT);
    }
 
 }
