@@ -24,6 +24,7 @@ public class MainView extends JFrame
    {
       setTitle(GameContext.TITLE + " v" + GameContext.VERSION + localIp);
       setSize(VIEW_WIDTH, VIEW_HEIGHT);
+      setResizable(false);
       setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
       setupMainView();
    }

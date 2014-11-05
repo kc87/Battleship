@@ -24,10 +24,12 @@ public class GameBoardView extends JPanel
    private void setupGameBoard(/*final FleedView ownFleedModel, final FleedView enemyFleedModel*/)
    {
       setLayout(new BorderLayout());
+      setBackground(Const.GAME_PANEL_COLOR);
 
       msgPanel = new JPanel(new FlowLayout());
       msgPanel.setPreferredSize(new Dimension(800, 60));
       msgPanel.setBorder(BorderFactory.createTitledBorder(PANEL_BORDER, "Message Board", TitledBorder.CENTER, TitledBorder.TOP));
+      msgPanel.setBackground(Const.GAME_PANEL_COLOR);
 
       add(msgPanel, BorderLayout.NORTH);
       add(GameContext.myFleedView, BorderLayout.WEST);

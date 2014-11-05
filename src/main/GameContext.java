@@ -14,6 +14,7 @@ public final class GameContext
 {
    public static final String TITLE = "P2P Battleship";
    public static final String VERSION = "0.1";
+   public static long startupTime = System.currentTimeMillis();
    //XXX: for debugging only!!
    public static String localBindAddress = null;
    public static MainView mainView = null;

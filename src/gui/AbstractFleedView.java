@@ -25,6 +25,7 @@ public abstract class AbstractFleedView extends JPanel
 
    private GridButtonHandler gridButtonHandler = null;
    private boolean isEnemy = false;
+   private boolean isEnabled = true;
 
    protected static final int DIM = SeaArea.DIM;
    protected JPanel seaGridPanel;
@@ -38,13 +39,39 @@ public abstract class AbstractFleedView extends JPanel
       setupFleedView();
    }
 
-   //public abstract void updateView(final AbstractFleedModel fleedModel);
+   public abstract void updatePartialView(final AbstractFleedModel fleedModel, final int i, final int j);
+
+
+   // Override swing method because default impl. is rather useless!!
+   @Override
+   public void setEnabled(final boolean enable)
+   {
+      if (isEnabled == enable) {
+         return;
+      }
+
+      super.setEnabled(enable);
+      if (gridButtonHandler != null) {
+         gridButtonHandler.setEnabled(enable);
+      }
+
+      isEnabled = enable;
+   }
+
+   public void updateTotalView(final AbstractFleedModel fleedModel)
+   {
+      for (int j = 0; j < DIM; j++) {
+         for (int i = 0; i < DIM; i++) {
+            updatePartialView(fleedModel, i, j);
+         }
+      }
+   }
 
    public void resetSeaGrid()
    {
       for (int j = 0; j < DIM; j++) {
          for (int i = 0; i < DIM; i++) {
-            gridButtons[i][j].setBackground(isEnemy ? Const.EMPTY_COLOR : Const.WATER_COLOR);
+            gridButtons[i][j].setBackground(Const.WATER_COLOR);
             gridButtons[i][j].setBorder(Const.WATER_BORDER);
             gridButtons[i][j].setText("");
          }
@@ -59,6 +86,7 @@ public abstract class AbstractFleedView extends JPanel
       setLayout(new BorderLayout());
       setPreferredSize(new Dimension(GRID_SIZE, GRID_SIZE));
       setBorder(panelTitleBorder);
+      setBackground(isEnemy ? Const.ENEMY_PANEL_COLOR : Const.OWN_PANEL_COLOR);
       createSeaGrid();
       resetSeaGrid();
    }
@@ -67,6 +95,7 @@ public abstract class AbstractFleedView extends JPanel
    private void createSeaGrid()
    {
       seaGridPanel = new JPanel(new GridLayout(DIM, DIM, 0, 0));
+      seaGridPanel.setBackground(isEnemy ? Const.ENEMY_PANEL_COLOR : Const.OWN_PANEL_COLOR);
       gridButtons = new SeaGridButton[DIM][DIM];
 
       for (int j = 0; j < DIM; j++) {
@@ -81,6 +110,11 @@ public abstract class AbstractFleedView extends JPanel
       sNumberScale = new JPanel(new GridLayout(1, DIM + 2, 0, 0));
       eAlphaScale = new JPanel(new GridLayout(DIM, 1, 0, 0));
       wAlphaScale = new JPanel(new GridLayout(DIM, 1, 0, 0));
+
+      nNumberScale.setBackground(isEnemy ? Const.ENEMY_PANEL_COLOR : Const.OWN_PANEL_COLOR);
+      sNumberScale.setBackground(isEnemy ? Const.ENEMY_PANEL_COLOR : Const.OWN_PANEL_COLOR);
+      eAlphaScale.setBackground(isEnemy ? Const.ENEMY_PANEL_COLOR : Const.OWN_PANEL_COLOR);
+      wAlphaScale.setBackground(isEnemy ? Const.ENEMY_PANEL_COLOR : Const.OWN_PANEL_COLOR);
 
       nNumberScale.setPreferredSize(new Dimension(GRID_SIZE, 30));
       sNumberScale.setPreferredSize(new Dimension(GRID_SIZE, 30));
@@ -118,6 +152,5 @@ public abstract class AbstractFleedView extends JPanel
       add(wAlphaScale, BorderLayout.WEST);
       add(sNumberScale, BorderLayout.SOUTH);
    }
-
 
 }

@@ -46,7 +46,6 @@ public class PeerReady extends GameStateAdapter
       newGameMsg.TYPE = Message.GAME;
       newGameMsg.SUB_TYPE = Message.NEW;
       engine.getNetController().sendMessage(newGameMsg, engine.getConnectedPeerId().split(":")[0]);
-      //engine.setState(new Playing(engine));
    }
 
    @Override

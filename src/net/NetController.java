@@ -1,6 +1,7 @@
 package net;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import main.GameContext;
 import net.protocol.Message;
@@ -106,7 +107,7 @@ public class NetController
 
    private void parsePacket(String jsonMsg, final String peerId)
    {
-      Gson gson = new Gson();
+      Gson gson = new GsonBuilder().serializeNulls().create();//new Gson();
 
       try {
          jsonMsg = jsonMsg.trim();

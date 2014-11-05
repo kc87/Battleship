@@ -1,5 +1,7 @@
 package net.protocol;
 
+import model.Ship;
+
 /**
  * Created by an unknown Java student on 11/3/14.
  */
@@ -23,5 +25,6 @@ public final class Message
    public int TYPE = CTRL;
    public int SUB_TYPE = KEEP_ALIVE;
    public Object PAYLOAD = null;
+   public Ship SHIP = null;
    public long SEQ = 0L;
 }

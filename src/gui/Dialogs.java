@@ -12,6 +12,19 @@ import java.net.UnknownHostException;
 public class Dialogs
 {
 
+   public static void showInfoThread(final String infoMsg)
+   {
+      new Thread(new Runnable()
+      {
+         @Override
+         public void run()
+         {
+            JOptionPane.showMessageDialog(null, infoMsg);
+         }
+      }).start();
+   }
+
+
    public static void showInfo(final String infoMsg)
    {
       JOptionPane.showMessageDialog(null, infoMsg);

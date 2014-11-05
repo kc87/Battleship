@@ -29,12 +29,12 @@ public class Main
 
    public static void quitApplication()
    {
-      if (Dialogs.confirmQuittingGame()) {
-         Logger.debug("Closing main window and exit.");
-         GameEngine.getInstance().stopNetReceiver();
-         GameContext.mainView.dispose();
-         System.exit(0);
-      }
+      //if (Dialogs.confirmQuittingGame()) {
+      Logger.debug("Closing main window and exit.");
+      GameEngine.getInstance().stopNetReceiver();
+      GameContext.mainView.dispose();
+      System.exit(0);
+      //}
    }
 
    public static void main(final String[] args)

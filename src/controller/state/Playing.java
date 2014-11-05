@@ -60,9 +60,8 @@ public class Playing extends GameStateAdapter
       Message bombMsg = new Message();
       bombMsg.TYPE = Message.GAME;
       bombMsg.SUB_TYPE = Message.SHOOT;
-      bombMsg.PAYLOAD = new int[]{i, j};
+      bombMsg.PAYLOAD = new Object[]{i, j};
       engine.getNetController().sendMessage(bombMsg, engine.getConnectedPeerId().split(":")[0]);
-
    }
 
 

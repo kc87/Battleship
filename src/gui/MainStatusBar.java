@@ -13,8 +13,8 @@ import java.awt.*;
 public class MainStatusBar extends JPanel implements GameEngine.StateListener
 {
    public static final int HEIGHT = 26;
-   private static final String GAME_STATE_PREFIX = " Game State: ";
-   private static final String CON_STATE_PREFIX = " Connection State: ";
+   private static final String GAME_STATE_PREFIX = " State: ";
+   private static final String CON_STATE_PREFIX = " Game State: ";
 
    private static final Color BAR_BG_COLOR = new Color(200, 200, 200);
    private static final Border LABEL_BORDER = BorderFactory.createLineBorder(new Color(88, 88, 88), 1);

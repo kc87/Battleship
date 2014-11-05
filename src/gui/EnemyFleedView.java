@@ -12,16 +12,29 @@ public class EnemyFleedView extends AbstractFleedView
       super(gridButtonHandler);
    }
 
-   public void updateView(final int i, final int j, final int result)
+   @Override
+   public void updatePartialView(final AbstractFleedModel fleedModel, final int i, final int j)
    {
-      if (result == AbstractFleedModel.MISS) {
-         gridButtons[i][j].setBackground(Const.WATER_COLOR);
+      int gridValue = fleedModel.getSeaGrid()[i + 1][j + 1];
+
+      // Just water
+      if (gridValue == 0 || gridValue == AbstractFleedModel.MISS) {
+         gridButtons[i][j].setBackground(gridValue == 0 ? Const.WATER_COLOR : Const.WATER_MISS_COLOR);
          gridButtons[i][j].setBorder(Const.WATER_BORDER);
+         gridButtons[i][j].setText(gridValue == 0 ? "" : "x");
+         return;
       }
 
-      if (result == AbstractFleedModel.HIT) {
+      if (gridValue == AbstractFleedModel.HIT) {
          gridButtons[i][j].setBackground(Const.HIT_COLOR);
          gridButtons[i][j].setBorder(Const.SHIP_BORDER);
+         return;
+      }
+
+      if (gridValue > 0 && gridValue < AbstractFleedModel.NUMBER_OF_SHIPS + 1) {
+         gridButtons[i][j].setBackground(Const.DESTROYED_COLOR);
+         gridButtons[i][j].setBorder(Const.DESTROYED_BORDER);
+         gridButtons[i][j].setText(Const.DEAD_SYMBOL);
       }
 
    }
