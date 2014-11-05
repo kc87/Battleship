@@ -166,6 +166,11 @@ public final class GameEngine implements NetController.Listener
             break;
          case "PeerReady":
          case "Playing":
+            // Ignore any but our peer
+            if (!connectedPeerId.equals(peerId)) {
+               return;
+            }
+
             if (msg.TYPE == Message.CTRL) {
                if (msg.SUB_TYPE == Message.CONNECT) {
                   msg.ACK_FLAG = true;
@@ -174,11 +179,8 @@ public final class GameEngine implements NetController.Listener
                }
 
                if (msg.SUB_TYPE == Message.DISCONNECT) {
-                  //disconnect from our peer?
-                  if (connectedPeerId.equals(peerId)) {
-                     connectedPeerId = null;
-                     setState(new Disconnected(this));
-                  }
+                  connectedPeerId = null;
+                  setState(new Disconnected(this));
                }
             }
 
@@ -250,13 +252,12 @@ public final class GameEngine implements NetController.Listener
                   }
 
                   setPlayerEnabled(myTurnFlag);
-
                }
             }
 
             break;
          default:
-            //TODO
+            //TODO: Maybe send some sort of reject message
             break;
       }
    }
@@ -277,7 +278,7 @@ public final class GameEngine implements NetController.Listener
    @Override
    public void onError(String errMsg)
    {
-      //TODO
+      //TODO: Inform the user
    }
 
    public interface StateListener
