@@ -200,9 +200,16 @@ public final class GameEngine implements NetController.Listener, AbstractFleedMo
                      msg.ACK_FLAG = true;
                      msg.PAYLOAD = new int[]{i, j, result};
                      netController.sendMessage(msg, connectedPeerId.split(":")[0]);
-                     GameContext.myFleedView.updateView(ownFleedModel);
-                  }
 
+                     // Optimized view update
+                     if (result != AbstractFleedModel.AGAIN && result != AbstractFleedModel.MISS) {
+                        if (result == AbstractFleedModel.HIT) {
+                           GameContext.myFleedView.updatePartialView(ownFleedModel, i, j);
+                        } else {
+                           GameContext.myFleedView.updateTotalView(ownFleedModel);
+                        }
+                     }
+                  }
                }
             }
 
@@ -221,7 +228,7 @@ public final class GameEngine implements NetController.Listener, AbstractFleedMo
       ownFleedModel = new OwnFleedModel();
       ownFleedModel.placeNewFleed();
       //enemyFleedModel = new EnemyFleedModel();
-      GameContext.myFleedView.updateView(ownFleedModel);
+      GameContext.myFleedView.updateTotalView(ownFleedModel);
    }
 
    @Override

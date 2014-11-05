@@ -15,14 +15,9 @@ public class OwnFleedView extends AbstractFleedView
       super(null);
    }
 
-
-   //@Override
-   public void updateView(final AbstractFleedModel fleedModel)
+   public void updatePartialView(final AbstractFleedModel fleedModel, final int i, final int j)
    {
-      for (int j = 0; j < DIM; j++) {
-         for (int i = 0; i < DIM; i++) {
-
-            int gridValue = fleedModel.getSeaGrid()[i + 1][j + 1];
+      int gridValue = fleedModel.getSeaGrid()[i + 1][j + 1];
 
             // Just water
             if (gridValue == 0) {
@@ -44,6 +39,15 @@ public class OwnFleedView extends AbstractFleedView
                gridButtons[i][j].setBackground(Const.HIT_COLOR);
                gridButtons[i][j].setBorder(Const.SHIP_BORDER);
             }
+
+   }
+
+   //@Override
+   public void updateTotalView(final AbstractFleedModel fleedModel)
+   {
+      for (int j = 0; j < DIM; j++) {
+         for (int i = 0; i < DIM; i++) {
+            updatePartialView(fleedModel, i, j);
          }
       }
    }
