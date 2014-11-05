@@ -1,5 +1,6 @@
 package gui;
 
+import controller.GameEngine;
 import model.SeaArea;
 import org.pmw.tinylog.Logger;
 
@@ -23,8 +24,7 @@ public class GridButtonHandler implements ActionListener
 
       Logger.debug("Button {0},{1} clicked", i, j);
 
-
-      //shoot(i,j);
+      GameEngine.getInstance().shoot(i, j);
    }
 
 }

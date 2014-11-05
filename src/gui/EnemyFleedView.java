@@ -12,26 +12,17 @@ public class EnemyFleedView extends AbstractFleedView
       super(gridButtonHandler);
    }
 
-   @Override
-   public void updateView(AbstractFleedModel fleedModel)
+   public void updateView(final int i, final int j, final int result)
    {
-      for (int j = 0; j < DIM; j++) {
-         for (int i = 0; i < DIM; i++) {
-
-            int gridValue = fleedModel.getSeaGrid()[i + 1][j + 1];
-
-            /*
-            if (gridValue > 0) {
-               gridButtons[i][j].setBackground(new Color(0, 0, 0));
-               gridButtons[i][j].setBorder(Const.SHIP_BORDER);
-               gridButtons[i][j].setText("" + ship.getSize());
-            } else {
-               gridButtons[i][j].setBackground(Const.EMPTY_COLOR);
-               gridButtons[i][j].setBorder(Const.WATER_BORDER);
-               gridButtons[i][j].setText("");
-            }*/
-
-         }
+      if (result == AbstractFleedModel.MISS) {
+         gridButtons[i][j].setBackground(Const.WATER_COLOR);
+         gridButtons[i][j].setBorder(Const.WATER_BORDER);
       }
+
+      if (result == AbstractFleedModel.HIT) {
+         gridButtons[i][j].setBackground(Const.HIT_COLOR);
+         gridButtons[i][j].setBorder(Const.SHIP_BORDER);
+      }
+
    }
 }

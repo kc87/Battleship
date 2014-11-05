@@ -38,7 +38,7 @@ public abstract class AbstractFleedView extends JPanel
       setupFleedView();
    }
 
-   public abstract void updateView(final AbstractFleedModel fleedModel);
+   //public abstract void updateView(final AbstractFleedModel fleedModel);
 
    public void resetSeaGrid()
    {

@@ -5,7 +5,7 @@ package model;
  */
 public class Ship
 {
-
+   private boolean destroyed = false;
    private int n, si, sj, dir, size, hits;
 
 
@@ -19,10 +19,18 @@ public class Ship
       this.hits = size;
    }
 
-   public int hit()
+   public boolean isDestroyed()
    {
-      hits--;
-      return hits;
+      return destroyed;
+   }
+
+   public void hit()
+   {
+      if (!destroyed) {
+         hits--;
+      }
+
+      destroyed = hits == 0;
    }
 
    public int getSize()

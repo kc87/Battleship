@@ -8,7 +8,7 @@ import net.protocol.Message;
 /**
  * Created by citizen4 on 04.11.2014.
  */
-public class PeerReady implements IGameState
+public class PeerReady extends GameStateAdapter
 {
 
    private GameEngine engine = null;
@@ -19,23 +19,23 @@ public class PeerReady implements IGameState
    }
 
    @Override
-   public void startNetReveiver(final NetController netController)
+   public void startNetReveiver()
    {
 
    }
 
    @Override
-   public void connectPeer(final NetController netController)
+   public void connectPeer()
    {
       Dialogs.showInfo("Disconnect current Player first!");
    }
 
    @Override
-   public void disconnectPeer(final NetController netController)
+   public void disconnectPeer()
    {
       Message disconnectMsg = new Message();
       disconnectMsg.SUB_TYPE = Message.DISCONNECT;
-      netController.sendMessage(disconnectMsg, engine.getConnectedPeerId().split(":")[0]);
+      engine.getNetController().sendMessage(disconnectMsg, engine.getConnectedPeerId().split(":")[0]);
       engine.setState(new Disconnected(engine));
    }
 
@@ -56,10 +56,10 @@ public class PeerReady implements IGameState
    }
 
    @Override
-   public void stopNetReceiver(final NetController netController)
+   public void stopNetReceiver()
    {
-      disconnectPeer(netController);
-      netController.stopReceiverThread();
+      disconnectPeer();
+      engine.getNetController().stopReceiverThread();
       engine.setState(new Stopped(engine));
    }
 }

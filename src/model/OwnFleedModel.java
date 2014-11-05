@@ -1,6 +1,7 @@
 package model;
 
 import main.GameContext;
+import org.pmw.tinylog.Logger;
 
 import java.util.Arrays;
 
@@ -16,16 +17,46 @@ public class OwnFleedModel extends AbstractFleedModel
    }
 
    @Override
-   public void updateModel()
+   public int update(final int i, final int j)
    {
+      int gridValue = seaGrid[i + 1][j + 1];
 
+      Logger.debug("gridValue:" + gridValue);
+
+      // You hit that before
+      if (gridValue < 0) {
+         return AGAIN;
+      }
+
+      if (gridValue > 0 && gridValue < NUMBER_OF_SHIPS + 1) {
+         Ship ship = ships[gridValue - 1];
+
+         // No need to wast bombs
+         if (ship.isDestroyed()) {
+            return AGAIN;
+         }
+
+         ship.hit();
+
+         if (ship.isDestroyed()) {
+            for (int m = 0, ix = ship.getStartI(), jy = ship.getStartJ(); m < ship.getSize(); m++) {
+               seaGrid[ix][jy] = Math.abs(gridValue);
+               ix += (ship.getDir() == 0) ? 1 : 0;
+               jy += (ship.getDir() != 0) ? 1 : 0;
+            }
+            return DESTROYED + gridValue - 1;
+         } else {
+            seaGrid[i + 1][j + 1] = -gridValue;
+            return HIT;
+         }
+      }
+
+      return MISS;
    }
 
    public void placeNewFleed()
    {
       while (createFleet() < NUMBER_OF_SHIPS) ;
-      //listener.onUpdate(this);
-      //GameContext.myFleedView.updateView(this);
    }
 
    private int createFleet()

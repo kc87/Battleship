@@ -7,7 +7,7 @@ import net.NetController;
 /**
  * Created by citizen4 on 04.11.2014.
  */
-public class Connecting implements IGameState
+public class Connecting extends GameStateAdapter
 {
 
    private GameEngine engine = null;
@@ -18,19 +18,19 @@ public class Connecting implements IGameState
    }
 
    @Override
-   public void startNetReveiver(NetController netController)
+   public void startNetReveiver()
    {
 
    }
 
    @Override
-   public void connectPeer(NetController netController)
+   public void connectPeer()
    {
       Dialogs.showInfo("Connection in progress!");
    }
 
    @Override
-   public void disconnectPeer(NetController netController)
+   public void disconnectPeer()
    {
 
    }
@@ -48,9 +48,9 @@ public class Connecting implements IGameState
    }
 
    @Override
-   public void stopNetReceiver(NetController netController)
+   public void stopNetReceiver()
    {
-      netController.stopReceiverThread();
+      engine.getNetController().stopReceiverThread();
       engine.setState(new Stopped(engine));
    }
 }

@@ -9,7 +9,7 @@ import org.pmw.tinylog.Logger;
 /**
  * Created by citizen4 on 04.11.2014.
  */
-public class Disconnected implements IGameState
+public class Disconnected extends GameStateAdapter
 {
 
    private GameEngine engine = null;
@@ -20,25 +20,25 @@ public class Disconnected implements IGameState
    }
 
    @Override
-   public void startNetReveiver(final NetController netController)
+   public void startNetReveiver()
    {
       Logger.warn("Net Receiver already up and running");
    }
 
    @Override
-   public void connectPeer(final NetController netController)
+   public void connectPeer()
    {
       String peerIp = null;
       if ((peerIp = Dialogs.requestPeerIp()) != null) {
          Message connectMsg = new Message();
          connectMsg.SUB_TYPE = Message.CONNECT;
-         netController.sendMessage(connectMsg, peerIp);
+         engine.getNetController().sendMessage(connectMsg, peerIp);
          engine.setState(new Connecting(engine));
       }
    }
 
    @Override
-   public void disconnectPeer(final NetController netController)
+   public void disconnectPeer()
    {
       Dialogs.showInfo("No Player connected!");
    }
@@ -56,21 +56,10 @@ public class Disconnected implements IGameState
    }
 
    @Override
-   public void stopNetReceiver(final NetController netController)
+   public void stopNetReceiver()
    {
-      netController.stopReceiverThread();
+      engine.getNetController().stopReceiverThread();
       engine.setState(new Stopped(engine));
    }
-
-   /*
-   private void connectPeerActive()
-   {
-
-   }
-
-   private void connectPeerPassive()
-   {
-
-   }*/
 
 }

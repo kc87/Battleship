@@ -8,6 +8,10 @@ import java.util.Arrays;
 public abstract class AbstractFleedModel
 {
    public static final int NUMBER_OF_SHIPS = 10;
+   public static final int MISS = -1;
+   public static final int HIT = 100;
+   public static final int AGAIN = 200;
+   public static final int DESTROYED = 0;
 
    protected static final int DIM = SeaArea.DIM;
    protected int[][] seaGrid = new int[(DIM + 2)][(DIM + 2)];
@@ -19,7 +23,7 @@ public abstract class AbstractFleedModel
       this.listener = listener;
    }
 
-   public abstract void updateModel();
+   public abstract int update(final int i, final int j);
 
    public int[][] getSeaGrid()
    {

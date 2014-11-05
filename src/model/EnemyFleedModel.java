@@ -11,8 +11,8 @@ public class EnemyFleedModel extends AbstractFleedModel
    }
 
    @Override
-   public void updateModel()
+   public int update(final int i, final int j)
    {
-
+      return 0;
    }
 }

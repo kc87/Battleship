@@ -29,31 +29,12 @@ public class NetController
    public NetController(final Listener listener)
    {
       this.listener = listener;
-
-      try {
-         sendSocket = new DatagramSocket(0);
-      } catch (SocketException e) {
-         Logger.error(e);
-      }
+      setupSockets();
    }
 
    public void startReceiverThread()
    {
       if (receiverThread == null || !receiverThread.isAlive()) {
-
-         if (recvSocket == null) {
-            try {
-               recvSocket = new DatagramSocket(null);
-               recvSocket.setSoTimeout(500);
-               //recvSocket.setReuseAddress(true);
-               InetSocketAddress bindAddress = (GameContext.localBindAddress != null) ?
-                       new InetSocketAddress(GameContext.localBindAddress, PORT) : new InetSocketAddress(PORT);
-               recvSocket.bind(bindAddress);
-            } catch (SocketException e) {
-               Logger.error(e);
-               return;
-            }
-         }
 
          receiverThread = new Thread(new Runnable()
          {
@@ -113,7 +94,7 @@ public class NetController
             try {
                byte[] pktData = gson.toJson(message).getBytes("UTF-8");
                DatagramPacket packet = new DatagramPacket(pktData, pktData.length,
-                       InetAddress.getByName(peerAddress), PORT);
+                     InetAddress.getByName(peerAddress), PORT);
                sendSocket.send(packet);
             } catch (IOException e) {
                Logger.error(e);
@@ -137,6 +118,37 @@ public class NetController
       }
    }
 
+
+   private void setupSockets()
+   {
+      InetSocketAddress sendSockAddress = null;
+      InetSocketAddress recvSockAddress = null;
+
+      // Bind receiver socket first to prevent port collision
+      try {
+
+         recvSocket = new DatagramSocket(null);
+
+         if (GameContext.localBindAddress == null) {
+            recvSockAddress = new InetSocketAddress(PORT);
+            recvSocket.bind(recvSockAddress);
+            sendSocket = new DatagramSocket(0);
+         } else {
+            Logger.debug("Bind address is: " + GameContext.localBindAddress);
+            recvSockAddress = new InetSocketAddress(GameContext.localBindAddress, PORT);
+            recvSocket.bind(recvSockAddress);
+
+            sendSockAddress = new InetSocketAddress(GameContext.localBindAddress, 0);
+            sendSocket = new DatagramSocket(null);
+            sendSocket.bind(sendSockAddress);
+         }
+
+         recvSocket.setSoTimeout(500);
+
+      } catch (SocketException e) {
+         Logger.error(e);
+      }
+   }
 
    public interface Listener
    {

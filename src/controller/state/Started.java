@@ -7,7 +7,7 @@ import org.pmw.tinylog.Logger;
 /**
  * Created by citizen4 on 04.11.2014.
  */
-public class Started implements IGameState
+public class Started extends GameStateAdapter
 {
    private GameEngine engine = null;
 
@@ -18,20 +18,20 @@ public class Started implements IGameState
 
 
    @Override
-   public void startNetReveiver(final NetController netController)
+   public void startNetReveiver()
    {
-      netController.startReceiverThread();
+      engine.getNetController().startReceiverThread();
       engine.setState(new Disconnected(engine));
    }
 
    @Override
-   public void connectPeer(final NetController netController)
+   public void connectPeer()
    {
       Logger.error("Wrong state transition");
    }
 
    @Override
-   public void disconnectPeer(final NetController netController)
+   public void disconnectPeer()
    {
       Logger.error("Wrong state transition");
    }
@@ -49,7 +49,7 @@ public class Started implements IGameState
    }
 
    @Override
-   public void stopNetReceiver(final NetController netController)
+   public void stopNetReceiver()
    {
       engine.setState(new Stopped(engine));
    }

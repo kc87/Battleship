@@ -13,6 +13,10 @@ import model.EnemyFleedModel;
 import model.OwnFleedModel;
 import net.NetController;
 import net.protocol.Message;
+import org.pmw.tinylog.Logger;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 /**
  * Created by citizen4 on 03.11.2014.
@@ -26,14 +30,6 @@ public final class GameEngine implements NetController.Listener, AbstractFleedMo
    private EnemyFleedModel enemyFleedModel = null;
    private StateListener stateListener = null;
    private ViewListener viewListener = null;
-
-   /*
-   private Started startedState = new Started(this);
-   private Stopped stoppedState = new Stopped(this);
-   private Disconnected disconnectedState = new Disconnected(this);
-   private PeerReady peerReadyState = new PeerReady(this);
-   private Playing playingState = new Playing(this);
-   */
 
    private IGameState currentState = new Started(this);
 
@@ -83,22 +79,22 @@ public final class GameEngine implements NetController.Listener, AbstractFleedMo
 
    public void startNetReveiver()
    {
-      currentState.startNetReveiver(netController);
+      currentState.startNetReveiver();
    }
 
    public void stopNetReceiver()
    {
-      currentState.stopNetReceiver(netController);
+      currentState.stopNetReceiver();
    }
 
    public void connectPeer()
    {
-      currentState.connectPeer(netController);
+      currentState.connectPeer();
    }
 
    public void disconnectPeer()
    {
-      currentState.disconnectPeer(netController);
+      currentState.disconnectPeer();
    }
 
    public void newGame()
@@ -109,6 +105,11 @@ public final class GameEngine implements NetController.Listener, AbstractFleedMo
    public void abortGame()
    {
       currentState.abortGame();
+   }
+
+   public void shoot(final int i, final int j)
+   {
+      currentState.shoot(i, j);
    }
 
    /*
@@ -180,6 +181,29 @@ public final class GameEngine implements NetController.Listener, AbstractFleedMo
                   setState(new PeerReady(this));
                }
 
+               if (msg.SUB_TYPE == Message.SHOOT) {
+
+                  ArrayList<Double> payload = (ArrayList<Double>) msg.PAYLOAD;
+
+                  int i = payload.get(0).intValue();
+                  int j = payload.get(1).intValue();
+
+                  if (msg.ACK_FLAG) {
+
+                     int result = payload.get(2).intValue();
+                     GameContext.enemyFleedView.updateView(i, j, result);
+
+                  } else {
+
+                     int result = ownFleedModel.update(i, j);
+
+                     msg.ACK_FLAG = true;
+                     msg.PAYLOAD = new int[]{i, j, result};
+                     netController.sendMessage(msg, connectedPeerId.split(":")[0]);
+                     GameContext.myFleedView.updateView(ownFleedModel);
+                  }
+
+               }
             }
 
             break;
@@ -196,6 +220,7 @@ public final class GameEngine implements NetController.Listener, AbstractFleedMo
    {
       ownFleedModel = new OwnFleedModel();
       ownFleedModel.placeNewFleed();
+      //enemyFleedModel = new EnemyFleedModel();
       GameContext.myFleedView.updateView(ownFleedModel);
    }
 

@@ -8,7 +8,7 @@ import net.protocol.Message;
 /**
  * Created by citizen4 on 04.11.2014.
  */
-public class Playing implements IGameState
+public class Playing extends GameStateAdapter
 {
    private GameEngine engine = null;
 
@@ -18,23 +18,23 @@ public class Playing implements IGameState
    }
 
    @Override
-   public void startNetReveiver(NetController netController)
+   public void startNetReveiver()
    {
 
    }
 
    @Override
-   public void connectPeer(final NetController netController)
+   public void connectPeer()
    {
       Dialogs.showInfo("Already connected to Player: " + engine.getConnectedPeerId());
    }
 
    @Override
-   public void disconnectPeer(final NetController netController)
+   public void disconnectPeer()
    {
       Message disconnectMsg = new Message();
       disconnectMsg.SUB_TYPE = Message.DISCONNECT;
-      netController.sendMessage(disconnectMsg, engine.getConnectedPeerId().split(":")[0]);
+      engine.getNetController().sendMessage(disconnectMsg, engine.getConnectedPeerId().split(":")[0]);
       engine.setState(new Disconnected(engine));
    }
 
@@ -55,10 +55,22 @@ public class Playing implements IGameState
    }
 
    @Override
-   public void stopNetReceiver(NetController netController)
+   public void shoot(final int i, final int j)
    {
-      disconnectPeer(netController);
-      netController.stopReceiverThread();
+      Message bombMsg = new Message();
+      bombMsg.TYPE = Message.GAME;
+      bombMsg.SUB_TYPE = Message.SHOOT;
+      bombMsg.PAYLOAD = new int[]{i, j};
+      engine.getNetController().sendMessage(bombMsg, engine.getConnectedPeerId().split(":")[0]);
+
+   }
+
+
+   @Override
+   public void stopNetReceiver()
+   {
+      disconnectPeer();
+      engine.getNetController().stopReceiverThread();
       engine.setState(new Stopped(engine));
    }
 }

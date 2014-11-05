@@ -9,16 +9,18 @@ import net.NetController;
  */
 public interface IGameState
 {
-   public void startNetReveiver(final NetController netController);
+   public void startNetReveiver();
 
-   public void connectPeer(final NetController netController);
+   public void connectPeer();
 
-   public void disconnectPeer(final NetController netController);
+   public void disconnectPeer();
 
    public void newGame();
 
    public void abortGame();
 
-   public void stopNetReceiver(final NetController netController);
+   public void stopNetReceiver();
+
+   public void shoot(final int i, final int j);
    //...
 }
