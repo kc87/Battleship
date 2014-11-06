@@ -52,6 +52,7 @@ public class Playing extends GameStateAdapter
       abortGameMsg.SUB_TYPE = Message.ABORT;
       engine.getNetController().sendMessage(abortGameMsg, engine.getConnectedPeerId().split(":")[0]);
       engine.setPlayerEnabled(true);
+      engine.getShotClock().stop();
       engine.setState(new PeerReady(engine));
    }
 

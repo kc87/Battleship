@@ -128,7 +128,6 @@ public final class GameEngine implements NetController.Listener, ShotClock.TimeI
 
    public void abortGame()
    {
-      //setPlayerEnabled(true);
       currentState.abortGame();
    }
 
@@ -190,14 +189,18 @@ public final class GameEngine implements NetController.Listener, ShotClock.TimeI
                      msg.ACK_FLAG = true;
                      netController.sendMessage(msg, peerId.split(":")[0]);
                   }
-
                   setState(new Playing(this));
                   startNewGame();
                }
 
                if (msg.SUB_TYPE == Message.ABORT) {
                   setPlayerEnabled(true);
+                  shotClock.stop();
                   setState(new PeerReady(this));
+               }
+
+               if (msg.SUB_TYPE == Message.TIMEOUT) {
+                  setPlayerEnabled(true);
                }
 
                if (msg.SUB_TYPE == Message.SHOOT) {
@@ -272,6 +275,12 @@ public final class GameEngine implements NetController.Listener, ShotClock.TimeI
 
    public void setPlayerEnabled(final boolean enable)
    {
+      if (enable) {
+         shotClock.reset();
+      } else {
+         shotClock.stop();
+      }
+
       GameContext.enemyFleedView.setEnabled(enable);
    }
 
@@ -285,6 +294,11 @@ public final class GameEngine implements NetController.Listener, ShotClock.TimeI
    public void onTimeIsUp()
    {
       Logger.debug("Time is up, again!");
+      Message timeoutMsg = new Message();
+      timeoutMsg.TYPE = Message.GAME;
+      timeoutMsg.SUB_TYPE = Message.TIMEOUT;
+      netController.sendMessage(timeoutMsg, connectedPeerId.split(":")[0]);
+      setPlayerEnabled(false);
    }
 
    public interface StateListener

@@ -2,6 +2,7 @@ package controller;
 
 import org.pmw.tinylog.Logger;
 
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -11,14 +12,14 @@ public class ShotClock
 {
    private static final int TIMEOUT = 10;
    private Thread shotClockThread = null;
-   private volatile AtomicInteger timeout;
+   private volatile AtomicInteger timeout = new AtomicInteger(TIMEOUT);
+   private volatile AtomicBoolean isStopped = new AtomicBoolean(false);
    private Object waitLock = new Object();
    private TickListener tickListener = null;
    private TimeIsUpListener timeIsUpListener = null;
 
    public ShotClock()
    {
-      startThread();
    }
 
    public void setTickListener(final TickListener listener)
@@ -31,16 +32,27 @@ public class ShotClock
       timeIsUpListener = listener;
    }
 
-   public void stop()
+   public void end()
    {
       if (shotClockThread != null && shotClockThread.isAlive()) {
          shotClockThread.interrupt();
       }
    }
 
+   public void stop()
+   {
+      isStopped.set(true);
+   }
+
    public void reset()
    {
-      timeout = new AtomicInteger(TIMEOUT);
+      timeout.set(TIMEOUT);
+      isStopped.set(false);
+
+      if (shotClockThread == null) {
+         startThread();
+      }
+
       synchronized (waitLock) {
          waitLock.notify();
       }
@@ -53,20 +65,24 @@ public class ShotClock
          @Override
          public void run()
          {
-            timeout = new AtomicInteger(TIMEOUT);
+            timeout.set(TIMEOUT);
 
             while (!Thread.currentThread().isInterrupted()) {
 
                try {
                   Thread.sleep(1000);
-                  Logger.debug("TICK:" + timeout);
+
+                  if (isStopped.get()) {
+                     continue;
+                  }
+
                   if (tickListener != null) {
                      tickListener.onTick(timeout.intValue());
                   }
 
-                  if (timeout.decrementAndGet() == 0) {
+                  if (timeout.getAndDecrement() == 0) {
                      //trigger time out event
-                     Logger.debug("Time is up");
+
                      if (timeIsUpListener != null) {
                         timeIsUpListener.onTimeIsUp();
                      }

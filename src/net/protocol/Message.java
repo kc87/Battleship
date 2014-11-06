@@ -18,6 +18,7 @@ public final class Message
    public static final int NEW = 3;
    public static final int ABORT = 4;
    public static final int SHOOT = 5;
+   public static final int TIMEOUT = 6;
 
 
    public boolean ACK_FLAG = false;
