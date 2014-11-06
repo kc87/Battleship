@@ -23,9 +23,10 @@ import java.util.ArrayList;
  * <p/>
  * Main Game Controller Singleton
  */
-public final class GameEngine implements NetController.Listener
+public final class GameEngine implements NetController.Listener, ShotClock.TimeIsUpListener
 {
    private static final GameEngine INSTANCE = new GameEngine();
+   private ShotClock shotClock = null;
    private String connectedPeerId = null;
    private NetController netController = null;
    private OwnFleedModel ownFleedModel = null;
@@ -41,6 +42,9 @@ public final class GameEngine implements NetController.Listener
    private GameEngine()
    {
       this.netController = new NetController(this);
+      this.shotClock = new ShotClock();
+      shotClock.setTimeIsUpListener(this);
+      shotClock.setTickListener(GameContext.enemyFleedView);
    }
 
    public static GameEngine getInstance()
@@ -92,6 +96,11 @@ public final class GameEngine implements NetController.Listener
       return currentState;
    }
 
+   public ShotClock getShotClock()
+   {
+      return shotClock;
+   }
+
    public void startNetReveiver()
    {
       currentState.startNetReveiver();
@@ -119,6 +128,7 @@ public final class GameEngine implements NetController.Listener
 
    public void abortGame()
    {
+      //setPlayerEnabled(true);
       currentState.abortGame();
    }
 
@@ -186,6 +196,7 @@ public final class GameEngine implements NetController.Listener
                }
 
                if (msg.SUB_TYPE == Message.ABORT) {
+                  setPlayerEnabled(true);
                   setState(new PeerReady(this));
                }
 
@@ -259,7 +270,7 @@ public final class GameEngine implements NetController.Listener
       setPlayerEnabled(myTurnFlag);
    }
 
-   private void setPlayerEnabled(final boolean enable)
+   public void setPlayerEnabled(final boolean enable)
    {
       GameContext.enemyFleedView.setEnabled(enable);
    }
@@ -268,6 +279,12 @@ public final class GameEngine implements NetController.Listener
    public void onError(String errMsg)
    {
       //TODO: Inform the user
+   }
+
+   @Override
+   public void onTimeIsUp()
+   {
+      Logger.debug("Time is up, again!");
    }
 
    public interface StateListener

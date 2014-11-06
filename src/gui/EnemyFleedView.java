@@ -1,11 +1,15 @@
 package gui;
 
+import controller.ShotClock;
 import model.AbstractFleedModel;
+import org.pmw.tinylog.Logger;
+
+import javax.swing.border.TitledBorder;
 
 /**
  * Created by an unknown Java student on 11/3/14.
  */
-public class EnemyFleedView extends AbstractFleedView
+public class EnemyFleedView extends AbstractFleedView implements ShotClock.TickListener
 {
    public EnemyFleedView(final GridButtonHandler gridButtonHandler)
    {
@@ -37,5 +41,15 @@ public class EnemyFleedView extends AbstractFleedView
          gridButtons[i][j].setText(Const.DEAD_SYMBOL);
       }
 
+   }
+
+   @Override
+   public void onTick(int tick)
+   {
+      Logger.debug("on tick");
+      TitledBorder tb = (TitledBorder) getBorder();
+      tb.setTitle(ENEMY_TITLE + " (" + tick + " s. left)");
+      setBorder(tb);
+      repaint();
    }
 }

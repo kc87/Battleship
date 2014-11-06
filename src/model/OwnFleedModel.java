@@ -17,7 +17,7 @@ public class OwnFleedModel extends AbstractFleedModel
       placeNewFleed();
    }
 
-   //@Override
+   // Update the model based on shoot at i,j
    public Object[] update(final int i, final int j)
    {
       int gridValue = seaGrid[i + 1][j + 1];
@@ -37,7 +37,7 @@ public class OwnFleedModel extends AbstractFleedModel
             return new Object[]{AGAIN, null};
          }
 
-         //beng beng:
+         //boom beng:
          ship.hit();
 
          if (ship.isDestroyed()) {

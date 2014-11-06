@@ -6,14 +6,19 @@ package model;
 public class Ship
 {
    private boolean destroyed = false;
-   private int n, si, sj, dir, size, hits;
+   private int n;      //position in fleed
+   private int startI; //start position i of ship in grid
+   private int startJ; //start position j of ship in grid
+   private int dir;    //ship heading (horizontal or vertical)
+   private int size;   //size of ship
+   private int hits;   //hits til destruction
 
 
    public Ship(int n, int si, int sj, int size, int dir)
    {
       this.n = n;
-      this.si = si;
-      this.sj = sj;
+      this.startI = si;
+      this.startJ = sj;
       this.dir = dir;
       this.size = size;
       this.hits = size;
@@ -45,12 +50,12 @@ public class Ship
 
    public int getStartI()
    {
-      return si;
+      return startI;
    }
 
    public int getStartJ()
    {
-      return sj;
+      return startJ;
    }
 
    public int getNumber()

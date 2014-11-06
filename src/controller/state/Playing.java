@@ -51,6 +51,7 @@ public class Playing extends GameStateAdapter
       abortGameMsg.TYPE = Message.GAME;
       abortGameMsg.SUB_TYPE = Message.ABORT;
       engine.getNetController().sendMessage(abortGameMsg, engine.getConnectedPeerId().split(":")[0]);
+      engine.setPlayerEnabled(true);
       engine.setState(new PeerReady(engine));
    }
 
@@ -62,6 +63,7 @@ public class Playing extends GameStateAdapter
       bombMsg.SUB_TYPE = Message.SHOOT;
       bombMsg.PAYLOAD = new Object[]{i, j};
       engine.getNetController().sendMessage(bombMsg, engine.getConnectedPeerId().split(":")[0]);
+      engine.getShotClock().reset();
    }
 
 

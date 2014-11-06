@@ -48,7 +48,6 @@ public class NetController
                while (!receiverThread.isInterrupted()) {
                   byte[] packetData = new byte[1024];
                   DatagramPacket packet = new DatagramPacket(packetData, packetData.length);
-                  msg = id = "";
                   try {
                      // blocking call
                      recvSocket.receive(packet);
@@ -85,7 +84,7 @@ public class NetController
    public void sendMessage(final Message message, final String peerAddress)
    {
       final Gson gson = new Gson();
-      Logger.debug("Msg: " + gson.toJson(message) + " to: " + peerAddress);
+      Logger.debug("Send: " + gson.toJson(message) + " to: " + peerAddress);
 
       new Thread(new Runnable()
       {
@@ -95,7 +94,7 @@ public class NetController
             try {
                byte[] pktData = gson.toJson(message).getBytes("UTF-8");
                DatagramPacket packet = new DatagramPacket(pktData, pktData.length,
-                     InetAddress.getByName(peerAddress), PORT);
+                       InetAddress.getByName(peerAddress), PORT);
                sendSocket.send(packet);
             } catch (IOException e) {
                Logger.error(e);
@@ -111,7 +110,7 @@ public class NetController
 
       try {
          jsonMsg = jsonMsg.trim();
-         Logger.debug("Recv.:" + jsonMsg + " peerId:" + peerId);
+         Logger.debug("Recv.:" + jsonMsg + " from:" + peerId);
          Message newMsg = gson.fromJson(jsonMsg, Message.class);
          listener.onMessage(newMsg, peerId);
       } catch (JsonSyntaxException e) {
