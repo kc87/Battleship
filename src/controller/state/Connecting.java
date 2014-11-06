@@ -25,26 +25,26 @@ public class Connecting extends GameStateAdapter
    @Override
    public void connectPeer()
    {
-      Dialogs.showInfo("Connection in progress!");
+      Dialogs.showOkMsg("Connection in progress!");
    }
 
    @Override
    public void disconnectPeer()
    {
       engine.setState(new Disconnected(engine));
-      Dialogs.showInfo("Connection attempt aborted by user!");
+      Dialogs.showOkMsg("Connection attempt aborted by user!");
    }
 
    @Override
    public void newGame()
    {
-      Dialogs.showInfo("No Player connected yet!");
+      Dialogs.showOkMsg("No Player connected yet!");
    }
 
    @Override
    public void abortGame()
    {
-      Dialogs.showInfo("No Game running!");
+      Dialogs.showOkMsg("No Game running!");
    }
 
    @Override

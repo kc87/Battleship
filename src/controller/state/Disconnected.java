@@ -33,25 +33,29 @@ public class Disconnected extends GameStateAdapter
          connectMsg.SUB_TYPE = Message.CONNECT;
          engine.getNetController().sendMessage(connectMsg, peerIp);
          engine.setState(new Connecting(engine));
+         if (Dialogs.showCancelMsg("Connecting...") == 0) {
+            //connection attempt aborted by user
+            engine.setState(new Disconnected(engine));
+         }
       }
    }
 
    @Override
    public void disconnectPeer()
    {
-      Dialogs.showInfo("No Player connected!");
+      Dialogs.showOkMsg("No Player connected!");
    }
 
    @Override
    public void newGame()
    {
-      Dialogs.showInfo("No Player connected!");
+      Dialogs.showOkMsg("No Player connected!");
    }
 
    @Override
    public void abortGame()
    {
-      Dialogs.showInfo("No Game running!");
+      Dialogs.showOkMsg("No Game running!");
    }
 
    @Override

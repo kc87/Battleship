@@ -151,19 +151,24 @@ public final class GameEngine implements NetController.Listener, ShotClock.TimeI
             break;
          case "Connecting":
             if (msg.TYPE == Message.CTRL && msg.SUB_TYPE == Message.CONNECT) {
+
+               Dialogs.closeMsgDialog();
+
                if (msg.ACK_FLAG && !msg.RST_FLAG) {
                   connectedPeerId = peerId;
                   setState(new PeerReady(this));
                }
 
+               /*
                if (msg.ACK_FLAG && msg.RST_FLAG) {
                   setState(new Disconnected(this));
-                  Dialogs.showInfo("Connection rejected!");
-               }
+                  Dialogs.showOkMsg("Connection rejected!");
+               }*/
             }
             break;
          case "PeerReady":
          case "Playing":
+
             // Ignore any but our peer
             if (!connectedPeerId.equals(peerId)) {
                return;
@@ -171,17 +176,19 @@ public final class GameEngine implements NetController.Listener, ShotClock.TimeI
 
             if (msg.TYPE == Message.CTRL) {
 
+               /*
                if (msg.SUB_TYPE == Message.CONNECT) {
                   msg.ACK_FLAG = true;
                   msg.RST_FLAG = true;
                   netController.sendMessage(msg, peerId.split(":")[0]);
-               }
+               }*/
 
-               if (msg.SUB_TYPE == Message.DISCONNECT) {
+               if (/*connectedPeerId.equals(peerId) &&*/ msg.SUB_TYPE == Message.DISCONNECT) {
                   connectedPeerId = null;
                   setState(new Disconnected(this));
                }
             }
+
 
             if (msg.TYPE == Message.GAME) {
 
@@ -199,6 +206,7 @@ public final class GameEngine implements NetController.Listener, ShotClock.TimeI
                   setPlayerEnabled(true);
                   shotClock.stop();
                   setState(new PeerReady(this));
+                  Dialogs.showOkMsg("Game aborted by peer!");
                }
 
                if (msg.SUB_TYPE == Message.TIMEOUT) {
@@ -282,7 +290,7 @@ public final class GameEngine implements NetController.Listener, ShotClock.TimeI
       } else {
          shotClock.stop();
       }
-      // Lets hope its really an EnemyFleedView object
+      // Lets hope this really is an EnemyFleedView object
       ((EnemyFleedView) enemyFleedModelUpdateListener).setEnabled(enable);
    }
 

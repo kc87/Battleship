@@ -26,7 +26,7 @@ public class PeerReady extends GameStateAdapter
    @Override
    public void connectPeer()
    {
-      Dialogs.showInfo("Disconnect current Player first!");
+      Dialogs.showOkMsg("Disconnect current Player first!");
    }
 
    @Override
@@ -50,7 +50,7 @@ public class PeerReady extends GameStateAdapter
    @Override
    public void abortGame()
    {
-      Dialogs.showInfo("No running game to abort!");
+      Dialogs.showOkMsg("No running game to abort!");
    }
 
    @Override

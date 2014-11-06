@@ -25,7 +25,7 @@ public class Playing extends GameStateAdapter
    @Override
    public void connectPeer()
    {
-      Dialogs.showInfo("Already connected to Player: " + engine.getConnectedPeerId());
+      Dialogs.showOkMsg("Already connected to Player: " + engine.getConnectedPeerId());
    }
 
    @Override
@@ -40,7 +40,7 @@ public class Playing extends GameStateAdapter
    @Override
    public void newGame()
    {
-      Dialogs.showInfo("Abort running game first!");
+      Dialogs.showOkMsg("Abort running game first!");
    }
 
    @Override

@@ -3,6 +3,7 @@ package gui;
 import org.pmw.tinylog.Logger;
 
 import javax.swing.*;
+import java.awt.*;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -11,6 +12,8 @@ import java.net.UnknownHostException;
  */
 public class Dialogs
 {
+   // is used as a handel to get JOptionPane window
+   public static final JLabel MSG_LABEL = new JLabel();
 
    public static void showInfoThread(final String infoMsg)
    {
@@ -24,10 +27,31 @@ public class Dialogs
       }).start();
    }
 
-
-   public static void showInfo(final String infoMsg)
+   public static void closeMsgDialog()
    {
-      JOptionPane.showMessageDialog(null, infoMsg);
+      Window window = SwingUtilities.getWindowAncestor(MSG_LABEL);
+      if (window != null) {
+         window.dispose();
+      }
+   }
+
+   public static int showCancelMsg(final String infoMsg)
+   {
+      Object[] options = {"Abort"};
+      MSG_LABEL.setText(infoMsg);
+      return JOptionPane.showOptionDialog(null,
+            MSG_LABEL, "",
+            JOptionPane.PLAIN_MESSAGE,
+            JOptionPane.INFORMATION_MESSAGE,
+            null,
+            options,
+            options[0]);
+   }
+
+   public static void showOkMsg(final String infoMsg)
+   {
+      MSG_LABEL.setText(infoMsg);
+      JOptionPane.showMessageDialog(null, MSG_LABEL);
    }
 
    public static boolean confirmQuittingGame()
@@ -55,8 +79,12 @@ public class Dialogs
     */
    public static String requestLocalBindIp()
    {
-      String lastOctet = JOptionPane.showInputDialog(null, "Choose unique client number [1..254]:",
-            "Start as local only client?", JOptionPane.OK_OPTION);
+      Object[] options = {"Ok"};
+      String lastOctet = (String) JOptionPane.showInputDialog(null,
+            "Choose unique client number [1..254]:",
+            "Start as local only client?",
+            JOptionPane.PLAIN_MESSAGE, null, null, null);
+
 
       if (lastOctet != null) {
 
