@@ -1,7 +1,6 @@
 package gui;
 
 import controller.GameEngine;
-import main.GameContext;
 
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
@@ -19,12 +18,16 @@ public class GameBoardView extends JPanel
    private void setupGameBoard()
    {
       setLayout(new BorderLayout());
-      setBackground(Const.GAME_PANEL_COLOR);
+      setBackground(GuiConstants.GAME_PANEL_COLOR);
+
+      OwnFleedView ownFleedView = new OwnFleedView();
+      EnemyFleedView enemyFleedView = new EnemyFleedView(new GridButtonHandler());
 
       add(new ScoreBoard(), BorderLayout.NORTH);
-      add(GameContext.myFleedView, BorderLayout.WEST);
-      add(GameContext.enemyFleedView, BorderLayout.EAST);
+      add(ownFleedView, BorderLayout.WEST);
+      add(enemyFleedView, BorderLayout.EAST);
 
-      GameEngine.getInstance().setModelUpdateListener(GameContext.myFleedView, GameContext.enemyFleedView);
+      GameEngine.getInstance().setModelUpdateListener(ownFleedView, enemyFleedView);
+      GameEngine.getInstance().getShotClock().setTickListener(enemyFleedView);
    }
 }

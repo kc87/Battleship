@@ -1,7 +1,5 @@
 package controller;
 
-import org.pmw.tinylog.Logger;
-
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -10,11 +8,11 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class ShotClock
 {
-   private static final int TIMEOUT = 10;
+   private static final int TIMEOUT = 9;
    private Thread shotClockThread = null;
    private volatile AtomicInteger timeout = new AtomicInteger(TIMEOUT);
    private volatile AtomicBoolean isStopped = new AtomicBoolean(false);
-   private Object waitLock = new Object();
+   private final Object waitLock = new Object();
    private TickListener tickListener = null;
    private TimeIsUpListener timeIsUpListener = null;
 
@@ -32,7 +30,7 @@ public class ShotClock
       timeIsUpListener = listener;
    }
 
-   public void end()
+   public void shutdown()
    {
       if (shotClockThread != null && shotClockThread.isAlive()) {
          shotClockThread.interrupt();
@@ -41,6 +39,7 @@ public class ShotClock
 
    public void stop()
    {
+      tickListener.onTick(TIMEOUT + 1);
       isStopped.set(true);
    }
 
@@ -48,6 +47,7 @@ public class ShotClock
    {
       timeout.set(TIMEOUT);
       isStopped.set(false);
+      tickListener.onTick(TIMEOUT + 1);
 
       if (shotClockThread == null) {
          startThread();
@@ -81,7 +81,6 @@ public class ShotClock
                   }
 
                   if (timeout.getAndDecrement() == 0) {
-                     //trigger time out event
 
                      if (timeIsUpListener != null) {
                         timeIsUpListener.onTimeIsUp();

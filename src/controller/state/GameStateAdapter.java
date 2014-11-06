@@ -1,7 +1,5 @@
 package controller.state;
 
-import net.NetController;
-
 /**
  * Created by an unknown Java student on 11/4/14.
  */

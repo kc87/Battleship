@@ -24,17 +24,18 @@ public class ScoreBoard extends JPanel implements GameEngine.ScoreListener
    {
       setLayout(new BorderLayout());
       setPreferredSize(new Dimension(800, 60));
-      setBorder(BorderFactory.createTitledBorder(Const.SCORE_BOARD_BORDER, "Score Board", TitledBorder.CENTER, TitledBorder.TOP));
-      setBackground(Const.GAME_PANEL_COLOR);
+      setBorder(BorderFactory.createTitledBorder(GuiConstants.SCORE_BOARD_BORDER, "Score Board",
+            TitledBorder.CENTER, TitledBorder.TOP));
+      setBackground(GuiConstants.GAME_PANEL_COLOR);
 
       leftLabel = new JLabel("My Ships:");
       leftLabel.setPreferredSize(new Dimension(360, 0));
-      leftLabel.setFont(Const.MESSAGE_BOARD_FONT);
+      leftLabel.setFont(GuiConstants.MESSAGE_BOARD_FONT);
       leftLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
       rightLabel = new JLabel("Enemy Ships:");
       rightLabel.setPreferredSize(new Dimension(360, 0));
-      rightLabel.setFont(Const.MESSAGE_BOARD_FONT);
+      rightLabel.setFont(GuiConstants.MESSAGE_BOARD_FONT);
       rightLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
       add(leftLabel, BorderLayout.WEST);

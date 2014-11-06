@@ -10,10 +10,14 @@ import org.pmw.tinylog.Logger;
  */
 public class Main
 {
+   public static final String TITLE = "P2P Battleship";
+   public static final String VERSION = "0.8";
+   public static String localBindAddress = null;
+   public static MainView mainView = null;
 
    public static void startApplication()
    {
-      GameContext.localBindAddress = Dialogs.requestLocalBindIp();
+      localBindAddress = Dialogs.requestLocalBindIp();
       GameEngine.getInstance().startNetReveiver();
 
       javax.swing.SwingUtilities.invokeLater(new Runnable()
@@ -21,8 +25,8 @@ public class Main
          public void run()
          {
             Logger.debug("Invoking MainView...");
-            GameContext.mainView = new MainView(GameContext.localBindAddress != null ? " [" + GameContext.localBindAddress + "]" : "");
-            GameContext.mainView.setVisible(true);
+            mainView = new MainView(localBindAddress != null ? " [" + localBindAddress + "]" : "");
+            mainView.setVisible(true);
          }
       });
    }
@@ -30,9 +34,10 @@ public class Main
    public static void quitApplication()
    {
       //if (Dialogs.confirmQuittingGame()) {
-      Logger.debug("Closing main window and exit.");
+      GameEngine.getInstance().getShotClock().shutdown();
       GameEngine.getInstance().stopNetReceiver();
-      GameContext.mainView.dispose();
+      Logger.debug("Closing main window and exit.");
+      mainView.dispose();
       System.exit(0);
       //}
    }

@@ -39,10 +39,10 @@ public class MainStatusBar extends JPanel implements GameEngine.StateListener
       setBorder(BAR_BORDER);
       setPreferredSize(new Dimension(0, HEIGHT));
 
-      connectionStateLabel = new JLabel(CON_STATE_PREFIX);
-      connectionStateLabel.setPreferredSize(new Dimension(200, 0));
+      connectionStateLabel = new JLabel(/*CON_STATE_PREFIX*/);
+      connectionStateLabel.setPreferredSize(new Dimension(250, 0));
       gameStateLabel = new JLabel(GAME_STATE_PREFIX);
-      gameStateLabel.setPreferredSize(new Dimension(180, 0));
+      gameStateLabel.setPreferredSize(new Dimension(250, 0));
 
       infoLabel = new JLabel();
 
@@ -53,11 +53,6 @@ public class MainStatusBar extends JPanel implements GameEngine.StateListener
       add(gameStateLabel, BorderLayout.WEST);
       add(connectionStateLabel, BorderLayout.EAST);
       add(infoLabel, BorderLayout.CENTER);
-   }
-
-
-   public void setInfoMessage()
-   {
    }
 
    @Override

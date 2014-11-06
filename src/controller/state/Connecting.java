@@ -2,7 +2,6 @@ package controller.state;
 
 import controller.GameEngine;
 import gui.Dialogs;
-import net.NetController;
 
 /**
  * Created by citizen4 on 04.11.2014.
@@ -32,7 +31,8 @@ public class Connecting extends GameStateAdapter
    @Override
    public void disconnectPeer()
    {
-
+      engine.setState(new Disconnected(engine));
+      Dialogs.showInfo("Connection attempt aborted by user!");
    }
 
    @Override

@@ -1,9 +1,7 @@
 package model;
 
-import main.GameContext;
 import org.pmw.tinylog.Logger;
 
-import java.util.Arrays;
 
 /**
  * Created by an unknown Java student on 11/3/14.
@@ -87,6 +85,7 @@ public class OwnFleedModel extends AbstractFleedModel
       return i;
    }
 
+   // I've no idea what I'm doing here ;)
    private boolean checkAndPlaceShip(int n, int si, int sj, int size, int dir)
    {
       int ci1 = si - 1;

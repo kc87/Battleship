@@ -2,7 +2,6 @@ package gui;
 
 import controller.ShotClock;
 import model.AbstractFleedModel;
-import org.pmw.tinylog.Logger;
 
 import javax.swing.border.TitledBorder;
 
@@ -20,25 +19,26 @@ public class EnemyFleedView extends AbstractFleedView implements ShotClock.TickL
    public void updatePartialView(final AbstractFleedModel fleedModel, final int i, final int j)
    {
       int gridValue = fleedModel.getSeaGrid()[i + 1][j + 1];
+      SeaGridButton gridButton = gridButtons[i][j];
 
       // Just water
       if (gridValue == 0 || gridValue == AbstractFleedModel.MISS) {
-         gridButtons[i][j].setBackground(gridValue == 0 ? Const.WATER_COLOR : Const.WATER_MISS_COLOR);
-         gridButtons[i][j].setBorder(Const.WATER_BORDER);
-         gridButtons[i][j].setText(gridValue == 0 ? "" : "x");
+         gridButton.setBackground(gridValue == 0 ? GuiConstants.WATER_COLOR : GuiConstants.WATER_MISS_COLOR);
+         gridButton.setBorder(GuiConstants.WATER_BORDER);
+         gridButton.setText(gridValue == 0 ? "" : "x");
          return;
       }
 
       if (gridValue == AbstractFleedModel.HIT) {
-         gridButtons[i][j].setBackground(Const.HIT_COLOR);
-         gridButtons[i][j].setBorder(Const.SHIP_BORDER);
+         gridButton.setBackground(GuiConstants.HIT_COLOR);
+         gridButton.setBorder(GuiConstants.SHIP_BORDER);
          return;
       }
 
       if (gridValue > 0 && gridValue < AbstractFleedModel.NUMBER_OF_SHIPS + 1) {
-         gridButtons[i][j].setBackground(Const.DESTROYED_COLOR);
-         gridButtons[i][j].setBorder(Const.DESTROYED_BORDER);
-         gridButtons[i][j].setText(Const.DEAD_SYMBOL);
+         gridButton.setBackground(GuiConstants.DESTROYED_COLOR);
+         gridButton.setBorder(GuiConstants.DESTROYED_BORDER);
+         gridButton.setText(GuiConstants.DEAD_SYMBOL);
       }
 
    }
@@ -46,9 +46,8 @@ public class EnemyFleedView extends AbstractFleedView implements ShotClock.TickL
    @Override
    public void onTick(int tick)
    {
-      Logger.debug("on tick");
       TitledBorder tb = (TitledBorder) getBorder();
-      tb.setTitle(ENEMY_TITLE + " (" + tick + " s. left)");
+      tb.setTitle(ENEMY_TITLE + " (" + tick + " sec. left)");
       setBorder(tb);
       repaint();
    }

@@ -56,7 +56,7 @@ public class Dialogs
    public static String requestLocalBindIp()
    {
       String lastOctet = JOptionPane.showInputDialog(null, "Choose unique client number [1..254]:",
-              "Start as local only client?", JOptionPane.QUESTION_MESSAGE);
+            "Start as local only client?", JOptionPane.OK_OPTION);
 
       if (lastOctet != null) {
 

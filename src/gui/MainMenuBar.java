@@ -1,9 +1,7 @@
 package gui;
 
 import controller.GameEngine;
-import main.GameContext;
 import main.Main;
-import org.pmw.tinylog.Logger;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -14,7 +12,7 @@ import java.awt.event.ActionListener;
  */
 public class MainMenuBar extends JMenuBar
 {
-   private static final String MENU_NAME = "Game";
+   private static final String MENU_NAME = "Menu";
 
    private JMenuItem connectItem = null;
    private JMenuItem disconnectItem = null;

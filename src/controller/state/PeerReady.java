@@ -2,7 +2,6 @@ package controller.state;
 
 import controller.GameEngine;
 import gui.Dialogs;
-import net.NetController;
 import net.protocol.Message;
 
 /**
@@ -21,7 +20,7 @@ public class PeerReady extends GameStateAdapter
    @Override
    public void startNetReveiver()
    {
-
+      // should never happen
    }
 
    @Override

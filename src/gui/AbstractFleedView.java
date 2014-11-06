@@ -2,7 +2,6 @@ package gui;
 
 import model.AbstractFleedModel;
 import model.SeaArea;
-import org.pmw.tinylog.Logger;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -15,9 +14,8 @@ import java.util.ArrayList;
 public abstract class AbstractFleedView extends JPanel implements AbstractFleedModel.ModelUpdateListener
 {
    private static final String[] ALPHA_SCALE = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J"};
-   private static final String MY_TITLE = "My Fleed View";
-   protected static final String ENEMY_TITLE = "Enemy Fleed Ctrl";
-   //private static final int DIM = SeaArea.DIM;
+   private static final String MY_TITLE = "My Fleed";
+   protected static final String ENEMY_TITLE = "Enemy Fleed";
    private static final int GRID_SIZE = 380;
 
    private JPanel nNumberScale;
@@ -41,11 +39,6 @@ public abstract class AbstractFleedView extends JPanel implements AbstractFleedM
       this.isEnemy = (gridButtonHandler != null);
 
       setupFleedView();
-   }
-
-   public void setIsEnabled(final boolean isEnabled)
-   {
-      this.isEnabled = isEnabled;
    }
 
    public abstract void updatePartialView(final AbstractFleedModel fleedModel, final int i, final int j);
@@ -76,7 +69,6 @@ public abstract class AbstractFleedView extends JPanel implements AbstractFleedM
    @Override
    public void setEnabled(final boolean enable)
    {
-
       if (isEnabled == enable) {
          return;
       }
@@ -90,28 +82,32 @@ public abstract class AbstractFleedView extends JPanel implements AbstractFleedM
          gridButtonColors.clear();
       }
 
-      //setBackground(isEnabled ? Const.PANEL_GRAY_COLOR : Const.ENEMY_PANEL_COLOR);
-      nNumberScale.setBackground(isEnabled ? Const.PANEL_GRAY_COLOR : Const.ENEMY_PANEL_COLOR);
-      sNumberScale.setBackground(isEnabled ? Const.PANEL_GRAY_COLOR : Const.ENEMY_PANEL_COLOR);
-      eAlphaScale.setBackground(isEnabled ? Const.PANEL_GRAY_COLOR : Const.ENEMY_PANEL_COLOR);
-      wAlphaScale.setBackground(isEnabled ? Const.PANEL_GRAY_COLOR : Const.ENEMY_PANEL_COLOR);
-
+      nNumberScale.setBackground(isEnabled ? GuiConstants.PANEL_GRAY_COLOR : GuiConstants.ENEMY_PANEL_COLOR);
+      sNumberScale.setBackground(isEnabled ? GuiConstants.PANEL_GRAY_COLOR : GuiConstants.ENEMY_PANEL_COLOR);
+      eAlphaScale.setBackground(isEnabled ? GuiConstants.PANEL_GRAY_COLOR : GuiConstants.ENEMY_PANEL_COLOR);
+      wAlphaScale.setBackground(isEnabled ? GuiConstants.PANEL_GRAY_COLOR : GuiConstants.ENEMY_PANEL_COLOR);
 
       for (int j = 0, k = 0; j < DIM; j++) {
          for (int i = 0; i < DIM; i++) {
             SeaGridButton gridButton = gridButtons[i][j];
             if (isEnabled) {
+               // gray out grid to mark it inactive
                Color bgColor = gridButton.getBackground();
                float[] bgRgb = bgColor.getRGBColorComponents(null);
                float gray = 0.2126f * bgRgb[0] + 0.7152f * bgRgb[1] + 0.0722f * bgRgb[2];
+               //float gray = 0.6f;
                gridButton.setBackground(new Color(gray, gray, gray));
-               gridButton.setBorder(Const.WATER_BORDER_GRAY);
-               //gridButton.repaint();
+               gridButton.setBorder(GuiConstants.WATER_BORDER_GRAY);
+               gridButton.setCursor(GuiConstants.PASSIVE_GRID_CURSOR);
+               gridButton.setEnabled(false);
+               // save color state of the grid
                gridButtonColors.add(bgColor);
             } else {
-               // restore colors
+               // restore color state of the grid
                gridButton.setBackground(gridButtonColors.get(k++));
-               gridButton.setBorder(Const.WATER_BORDER);
+               gridButton.setBorder(GuiConstants.WATER_BORDER);
+               gridButton.setCursor(GuiConstants.ACTIVE_GRID_CURSOR);
+               gridButton.setEnabled(true);
             }
          }
       }
@@ -124,8 +120,8 @@ public abstract class AbstractFleedView extends JPanel implements AbstractFleedM
    {
       for (int j = 0; j < DIM; j++) {
          for (int i = 0; i < DIM; i++) {
-            gridButtons[i][j].setBackground(Const.WATER_COLOR);
-            gridButtons[i][j].setBorder(Const.WATER_BORDER);
+            gridButtons[i][j].setBackground(GuiConstants.WATER_COLOR);
+            gridButtons[i][j].setBorder(GuiConstants.WATER_BORDER);
             gridButtons[i][j].setText("");
          }
       }
@@ -134,12 +130,12 @@ public abstract class AbstractFleedView extends JPanel implements AbstractFleedM
 
    private void setupFleedView()
    {
-      panelTitleBorder = BorderFactory.createTitledBorder(Const.GRID_PANEL_BORDER,
-              (isEnemy ? ENEMY_TITLE : MY_TITLE), TitledBorder.CENTER, TitledBorder.TOP);
+      panelTitleBorder = BorderFactory.createTitledBorder(GuiConstants.GRID_PANEL_BORDER,
+            (isEnemy ? ENEMY_TITLE : MY_TITLE), TitledBorder.CENTER, TitledBorder.TOP);
       setLayout(new BorderLayout());
       setPreferredSize(new Dimension(GRID_SIZE, GRID_SIZE));
       setBorder(panelTitleBorder);
-      setBackground(Const.GAME_PANEL_COLOR);
+      setBackground(GuiConstants.GAME_PANEL_COLOR);
       createSeaGrid();
       resetSeaGrid();
    }
@@ -148,14 +144,17 @@ public abstract class AbstractFleedView extends JPanel implements AbstractFleedM
    private void createSeaGrid()
    {
       seaGridPanel = new JPanel(new GridLayout(DIM, DIM, 0, 0));
-      seaGridPanel.setBackground(Const.GAME_PANEL_COLOR);
+      seaGridPanel.setBackground(GuiConstants.GAME_PANEL_COLOR);
       gridButtons = new SeaGridButton[DIM][DIM];
 
       for (int j = 0; j < DIM; j++) {
          for (int i = 0; i < DIM; i++) {
-            gridButtons[i][j] = new SeaGridButton(j * DIM + i);
-            gridButtons[i][j].addActionListener(gridButtonHandler);
-            seaGridPanel.add(gridButtons[i][j]);
+            SeaGridButton gridButton = new SeaGridButton(j * DIM + i);
+            gridButton.addActionListener(gridButtonHandler);
+            gridButton.setEnabled(isEnemy);
+            gridButton.setCursor(isEnemy ? GuiConstants.ACTIVE_GRID_CURSOR : GuiConstants.PASSIVE_GRID_CURSOR);
+            gridButtons[i][j] = gridButton;
+            seaGridPanel.add(gridButton);
          }
       }
 
@@ -164,10 +163,10 @@ public abstract class AbstractFleedView extends JPanel implements AbstractFleedM
       eAlphaScale = new JPanel(new GridLayout(DIM, 1, 0, 0));
       wAlphaScale = new JPanel(new GridLayout(DIM, 1, 0, 0));
 
-      nNumberScale.setBackground(isEnemy ? Const.ENEMY_PANEL_COLOR : Const.OWN_PANEL_COLOR);
-      sNumberScale.setBackground(isEnemy ? Const.ENEMY_PANEL_COLOR : Const.OWN_PANEL_COLOR);
-      eAlphaScale.setBackground(isEnemy ? Const.ENEMY_PANEL_COLOR : Const.OWN_PANEL_COLOR);
-      wAlphaScale.setBackground(isEnemy ? Const.ENEMY_PANEL_COLOR : Const.OWN_PANEL_COLOR);
+      nNumberScale.setBackground(isEnemy ? GuiConstants.ENEMY_PANEL_COLOR : GuiConstants.OWN_PANEL_COLOR);
+      sNumberScale.setBackground(isEnemy ? GuiConstants.ENEMY_PANEL_COLOR : GuiConstants.OWN_PANEL_COLOR);
+      eAlphaScale.setBackground(isEnemy ? GuiConstants.ENEMY_PANEL_COLOR : GuiConstants.OWN_PANEL_COLOR);
+      wAlphaScale.setBackground(isEnemy ? GuiConstants.ENEMY_PANEL_COLOR : GuiConstants.OWN_PANEL_COLOR);
 
       nNumberScale.setPreferredSize(new Dimension(GRID_SIZE, 30));
       sNumberScale.setPreferredSize(new Dimension(GRID_SIZE, 30));
@@ -175,25 +174,25 @@ public abstract class AbstractFleedView extends JPanel implements AbstractFleedM
       wAlphaScale.setPreferredSize(new Dimension(30, GRID_SIZE));
 
       for (int i = 0; i < DIM + 2; i++) {
-         JLabel l;
-         l = new JLabel("", SwingConstants.CENTER);
-         l.setFont(Const.SCALE_FONT);
+         JLabel scaleLabel;
+         scaleLabel = new JLabel("", SwingConstants.CENTER);
+         scaleLabel.setFont(GuiConstants.SCALE_FONT);
          if (i > 0 && i < DIM + 1)
-            l.setText(i + "");
-         nNumberScale.add(l);
-         l = new JLabel("", SwingConstants.CENTER);
-         l.setFont(Const.SCALE_FONT);
+            scaleLabel.setText(i + "");
+         nNumberScale.add(scaleLabel);
+         scaleLabel = new JLabel("", SwingConstants.CENTER);
+         scaleLabel.setFont(GuiConstants.SCALE_FONT);
          if (i > 0 && i < DIM + 1)
-            l.setText(i + "");
-         sNumberScale.add(l);
+            scaleLabel.setText(i + "");
+         sNumberScale.add(scaleLabel);
 
          if (i > 0 && i < DIM + 1) {
-            l = new JLabel(ALPHA_SCALE[i - 1], SwingConstants.CENTER);
-            l.setFont(Const.SCALE_FONT);
-            eAlphaScale.add(l);
-            l = new JLabel(ALPHA_SCALE[i - 1], SwingConstants.CENTER);
-            l.setFont(Const.SCALE_FONT);
-            wAlphaScale.add(l);
+            scaleLabel = new JLabel(ALPHA_SCALE[i - 1], SwingConstants.CENTER);
+            scaleLabel.setFont(GuiConstants.SCALE_FONT);
+            eAlphaScale.add(scaleLabel);
+            scaleLabel = new JLabel(ALPHA_SCALE[i - 1], SwingConstants.CENTER);
+            scaleLabel.setFont(GuiConstants.SCALE_FONT);
+            wAlphaScale.add(scaleLabel);
          }
       }
 

@@ -15,7 +15,7 @@ public class SeaGridButton extends JButton
       setPreferredSize(new Dimension(SIZE, SIZE));
       setFocusPainted(false);
       setActionCommand("" + index);
-      setFont(Const.GRID_BUTTON_FONT);
+      setFont(GuiConstants.GRID_BUTTON_FONT);
    }
 
 }

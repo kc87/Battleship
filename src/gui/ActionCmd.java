@@ -1,9 +1,6 @@
 package gui;
 
-/**
- * Created by citizen4 on 03.11.2014.
- */
-public class ActionCmd
+public interface ActionCmd
 {
    public static final String CONNECT_PEER_CMD = "1";
    public static final String DISCONNECT_PEER_CMD = "2";

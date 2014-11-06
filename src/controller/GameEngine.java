@@ -6,7 +6,7 @@ import controller.state.PeerReady;
 import controller.state.Playing;
 import controller.state.Started;
 import gui.Dialogs;
-import main.GameContext;
+import gui.EnemyFleedView;
 import model.AbstractFleedModel;
 import model.AbstractFleedModel.ModelUpdateListener;
 import model.EnemyFleedModel;
@@ -44,7 +44,6 @@ public final class GameEngine implements NetController.Listener, ShotClock.TimeI
       this.netController = new NetController(this);
       this.shotClock = new ShotClock();
       shotClock.setTimeIsUpListener(this);
-      shotClock.setTickListener(GameContext.enemyFleedView);
    }
 
    public static GameEngine getInstance()
@@ -136,6 +135,7 @@ public final class GameEngine implements NetController.Listener, ShotClock.TimeI
       currentState.shoot(i, j);
    }
 
+   // TODO: This method obviously needs some refactoring ;)
    @Override
    public void onMessage(Message msg, final String peerId)
    {
@@ -170,6 +170,7 @@ public final class GameEngine implements NetController.Listener, ShotClock.TimeI
             }
 
             if (msg.TYPE == Message.CTRL) {
+
                if (msg.SUB_TYPE == Message.CONNECT) {
                   msg.ACK_FLAG = true;
                   msg.RST_FLAG = true;
@@ -183,6 +184,7 @@ public final class GameEngine implements NetController.Listener, ShotClock.TimeI
             }
 
             if (msg.TYPE == Message.GAME) {
+
                if (msg.SUB_TYPE == Message.NEW) {
                   myTurnFlag = msg.ACK_FLAG;
                   if (!msg.ACK_FLAG && !msg.RST_FLAG) {
@@ -280,8 +282,8 @@ public final class GameEngine implements NetController.Listener, ShotClock.TimeI
       } else {
          shotClock.stop();
       }
-
-      GameContext.enemyFleedView.setEnabled(enable);
+      // Lets hope its really an EnemyFleedView object
+      ((EnemyFleedView) enemyFleedModelUpdateListener).setEnabled(enable);
    }
 
    @Override
@@ -293,7 +295,6 @@ public final class GameEngine implements NetController.Listener, ShotClock.TimeI
    @Override
    public void onTimeIsUp()
    {
-      Logger.debug("Time is up, again!");
       Message timeoutMsg = new Message();
       timeoutMsg.TYPE = Message.GAME;
       timeoutMsg.SUB_TYPE = Message.TIMEOUT;

@@ -7,16 +7,19 @@ import java.awt.*;
 /**
  * Created by citizen4 on 03.11.2014.
  */
-public final class Const
+public interface GuiConstants
 {
    public static final String DEAD_SYMBOL = "\u2620";
+
+   public static final Cursor ACTIVE_GRID_CURSOR = new Cursor(Cursor.HAND_CURSOR);
+   public static final Cursor PASSIVE_GRID_CURSOR = new Cursor(Cursor.DEFAULT_CURSOR);
 
    public static final Font GRID_BUTTON_FONT = new Font("SanSerif", Font.PLAIN, 18);
    public static final Font SCALE_FONT = new Font("SanSerif", Font.BOLD, 14);
    public static final Font MESSAGE_BOARD_FONT = new Font("SanSerif", Font.BOLD, 24);
 
    public static final Color GRID_PANEL_COLOR = new Color(133, 133, 133);
-   public static final Color GAME_PANEL_COLOR = new Color(222, 222, 222);
+   public static final Color GAME_PANEL_COLOR = new Color(250, 250, 250);
    public static final Color OWN_PANEL_COLOR = new Color(100, 255, 100);
    public static final Color PANEL_GRAY_COLOR = new Color(188, 188, 188);
    public static final Color ENEMY_PANEL_COLOR = new Color(255, 100, 100);
@@ -37,8 +40,4 @@ public final class Const
    public static final Border DESTROYED_BORDER = BorderFactory.createLineBorder(new Color(188, 188, 188), 1);
    public static final Border INVISIBLE_BORDER = BorderFactory.createEmptyBorder();
 
-
-   private Const()
-   {
-   }
 }

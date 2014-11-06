@@ -1,7 +1,6 @@
 package controller.state;
 
 import controller.GameEngine;
-import net.NetController;
 import org.pmw.tinylog.Logger;
 
 /**
@@ -15,7 +14,6 @@ public class Started extends GameStateAdapter
    {
       this.engine = engine;
    }
-
 
    @Override
    public void startNetReveiver()

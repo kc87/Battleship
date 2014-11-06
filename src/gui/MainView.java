@@ -1,8 +1,6 @@
 package gui;
 
-import main.GameContext;
 import main.Main;
-import org.pmw.tinylog.Logger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,13 +20,12 @@ public class MainView extends JFrame
 
    public MainView(final String localIp)
    {
-      setTitle(GameContext.TITLE + " v" + GameContext.VERSION + localIp);
+      setTitle(Main.TITLE + " v" + Main.VERSION + localIp);
       setSize(VIEW_WIDTH, VIEW_HEIGHT);
       setResizable(false);
       setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
       setupMainView();
    }
-
 
    private void setupMainView()
    {
@@ -40,7 +37,6 @@ public class MainView extends JFrame
       add(gameBoardView, BorderLayout.CENTER);
       add(statusBar, BorderLayout.SOUTH);
 
-
       addWindowListener(new WindowAdapter()
       {
          @Override
@@ -50,19 +46,5 @@ public class MainView extends JFrame
          }
       });
    }
-
-
-   private void setupMenu()
-   {
-
-
-   }
-
-
-   private void setupStatusBar()
-   {
-
-   }
-
 
 }

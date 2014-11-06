@@ -2,7 +2,6 @@ package controller.state;
 
 import controller.GameEngine;
 import gui.Dialogs;
-import net.NetController;
 import net.protocol.Message;
 import org.pmw.tinylog.Logger;
 
@@ -28,7 +27,7 @@ public class Disconnected extends GameStateAdapter
    @Override
    public void connectPeer()
    {
-      String peerIp = null;
+      String peerIp;
       if ((peerIp = Dialogs.requestPeerIp()) != null) {
          Message connectMsg = new Message();
          connectMsg.SUB_TYPE = Message.CONNECT;

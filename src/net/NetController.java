@@ -3,7 +3,7 @@ package net;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
-import main.GameContext;
+import main.Main;
 import net.protocol.Message;
 import org.pmw.tinylog.Logger;
 
@@ -94,7 +94,7 @@ public class NetController
             try {
                byte[] pktData = gson.toJson(message).getBytes("UTF-8");
                DatagramPacket packet = new DatagramPacket(pktData, pktData.length,
-                       InetAddress.getByName(peerAddress), PORT);
+                     InetAddress.getByName(peerAddress), PORT);
                sendSocket.send(packet);
             } catch (IOException e) {
                Logger.error(e);
@@ -110,7 +110,7 @@ public class NetController
 
       try {
          jsonMsg = jsonMsg.trim();
-         Logger.debug("Recv.:" + jsonMsg + " from:" + peerId);
+         Logger.debug("Recv.:" + jsonMsg + " from: " + peerId);
          Message newMsg = gson.fromJson(jsonMsg, Message.class);
          listener.onMessage(newMsg, peerId);
       } catch (JsonSyntaxException e) {
@@ -121,24 +121,24 @@ public class NetController
 
    private void setupSockets()
    {
-      InetSocketAddress sendSockAddress = null;
-      InetSocketAddress recvSockAddress = null;
+      InetSocketAddress sendSockAddress;
+      InetSocketAddress recvSockAddress;
 
       // Bind receiver socket first to prevent port collision
       try {
 
          recvSocket = new DatagramSocket(null);
 
-         if (GameContext.localBindAddress == null) {
+         if (Main.localBindAddress == null) {
             recvSockAddress = new InetSocketAddress(PORT);
             recvSocket.bind(recvSockAddress);
             sendSocket = new DatagramSocket(0);
          } else {
-            Logger.debug("Bind address is: " + GameContext.localBindAddress);
-            recvSockAddress = new InetSocketAddress(GameContext.localBindAddress, PORT);
+            Logger.debug("Bind address is: " + Main.localBindAddress);
+            recvSockAddress = new InetSocketAddress(Main.localBindAddress, PORT);
             recvSocket.bind(recvSockAddress);
 
-            sendSockAddress = new InetSocketAddress(GameContext.localBindAddress, 0);
+            sendSockAddress = new InetSocketAddress(Main.localBindAddress, 0);
             sendSocket = new DatagramSocket(null);
             sendSocket.bind(sendSockAddress);
          }

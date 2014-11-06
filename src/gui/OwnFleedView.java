@@ -2,9 +2,6 @@ package gui;
 
 import model.AbstractFleedModel;
 import model.Ship;
-import org.pmw.tinylog.Logger;
-
-import java.awt.*;
 
 /**
  * Created by an unknown Java student on 11/3/14.
@@ -23,8 +20,8 @@ public class OwnFleedView extends AbstractFleedView
 
       // Just water
       if (gridValue == 0 || gridValue == AbstractFleedModel.MISS) {
-         gridButtons[i][j].setBackground(gridValue == 0 ? Const.WATER_COLOR : Const.WATER_MISS_COLOR);
-         gridButtons[i][j].setBorder(Const.WATER_BORDER);
+         gridButtons[i][j].setBackground(gridValue == 0 ? GuiConstants.WATER_COLOR : GuiConstants.WATER_MISS_COLOR);
+         gridButtons[i][j].setBorder(GuiConstants.WATER_BORDER);
          gridButtons[i][j].setText(gridValue == 0 ? "" : "x");
          return;
       }
@@ -32,16 +29,16 @@ public class OwnFleedView extends AbstractFleedView
       // Ship is undamaged or destroyed
       if (gridValue > 0) {
          Ship ship = fleedModel.getShips()[gridValue - 1];
-         gridButtons[i][j].setBackground(ship.isDestroyed() ? Const.DESTROYED_COLOR : Const.SHIP_COLOR);
-         gridButtons[i][j].setBorder(ship.isDestroyed() ? Const.DESTROYED_BORDER : Const.SHIP_BORDER);
-         gridButtons[i][j].setText(ship.isDestroyed() ? Const.DEAD_SYMBOL : "" + ship.getSize());
+         gridButtons[i][j].setBackground(ship.isDestroyed() ? GuiConstants.DESTROYED_COLOR : GuiConstants.SHIP_COLOR);
+         gridButtons[i][j].setBorder(ship.isDestroyed() ? GuiConstants.DESTROYED_BORDER : GuiConstants.SHIP_BORDER);
+         gridButtons[i][j].setText(ship.isDestroyed() ? GuiConstants.DEAD_SYMBOL : "" + ship.getSize());
          return;
       }
 
       // Ship is partially damaged
       if (gridValue < 0) {
-         gridButtons[i][j].setBackground(Const.HIT_COLOR);
-         gridButtons[i][j].setBorder(Const.HIT_BORDER);
+         gridButtons[i][j].setBackground(GuiConstants.HIT_COLOR);
+         gridButtons[i][j].setBorder(GuiConstants.HIT_BORDER);
          return;
       }
    }
