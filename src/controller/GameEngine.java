@@ -20,7 +20,7 @@ import java.util.ArrayList;
 
 /**
  * Created by citizen4 on 03.11.2014.
- *
+ * <p/>
  * Main Game Controller Singleton
  */
 public final class GameEngine implements NetController.Listener
@@ -126,17 +126,6 @@ public final class GameEngine implements NetController.Listener
    {
       currentState.shoot(i, j);
    }
-
-   /*
-   public void startApplication()
-   {
-
-   }
-
-   public void quitApplication()
-   {
-
-   }*/
 
    @Override
    public void onMessage(Message msg, final String peerId)
