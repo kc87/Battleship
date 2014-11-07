@@ -6,10 +6,6 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 
-/**
- * Created by an unknown Java student on 11/5/14.
- */
-
 public class ScoreBoard extends JPanel implements GameEngine.ScoreListener
 {
    private JLabel leftLabel = null;
@@ -25,7 +21,7 @@ public class ScoreBoard extends JPanel implements GameEngine.ScoreListener
       setLayout(new BorderLayout());
       setPreferredSize(new Dimension(800, 60));
       setBorder(BorderFactory.createTitledBorder(GuiConstants.SCORE_BOARD_BORDER, "Score Board",
-            TitledBorder.CENTER, TitledBorder.TOP));
+              TitledBorder.CENTER, TitledBorder.TOP));
       setBackground(GuiConstants.GAME_PANEL_COLOR);
 
       leftLabel = new JLabel("My Ships:");

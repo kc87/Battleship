@@ -3,9 +3,6 @@ package controller.state;
 import controller.GameEngine;
 import org.pmw.tinylog.Logger;
 
-/**
- * Created by citizen4 on 04.11.2014.
- */
 public class Started extends GameStateAdapter
 {
    private GameEngine engine = null;

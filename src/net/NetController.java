@@ -15,9 +15,6 @@ import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
-/**
- * Created by an unknown Java student on 11/3/14.
- */
 public class NetController
 {
    private static final int PORT = 60000;
@@ -94,7 +91,7 @@ public class NetController
             try {
                byte[] pktData = gson.toJson(message).getBytes("UTF-8");
                DatagramPacket packet = new DatagramPacket(pktData, pktData.length,
-                     InetAddress.getByName(peerAddress), PORT);
+                       InetAddress.getByName(peerAddress), PORT);
                sendSocket.send(packet);
             } catch (IOException e) {
                Logger.error(e);

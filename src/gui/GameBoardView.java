@@ -2,12 +2,9 @@ package gui;
 
 import controller.GameEngine;
 
-import javax.swing.JPanel;
-import java.awt.BorderLayout;
+import javax.swing.*;
+import java.awt.*;
 
-/**
- * Created by an unknown Java student on 11/3/14.
- */
 public class GameBoardView extends JPanel
 {
    public GameBoardView()

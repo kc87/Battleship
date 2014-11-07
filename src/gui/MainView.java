@@ -7,9 +7,6 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-/**
- * Created by an unknown Java student on 11/3/14.
- */
 public class MainView extends JFrame
 {
    private static final int VIEW_WIDTH = 800;

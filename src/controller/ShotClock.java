@@ -3,12 +3,9 @@ package controller;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-/**
- * Created by citizen4 on 06.11.2014.
- */
 public class ShotClock
 {
-   private static final int TIMEOUT = 9;
+   private static final int TIMEOUT = 4;
    private Thread shotClockThread = null;
    private volatile AtomicInteger timeout = new AtomicInteger(TIMEOUT);
    private volatile AtomicBoolean isStopped = new AtomicBoolean(false);

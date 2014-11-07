@@ -7,9 +7,6 @@ import java.awt.*;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-/**
- * Created by an unknown Java student on 11/4/14.
- */
 public class Dialogs
 {
    // is used as a handel to get JOptionPane window
@@ -40,12 +37,12 @@ public class Dialogs
       Object[] options = {"Abort"};
       MSG_LABEL.setText(infoMsg);
       return JOptionPane.showOptionDialog(null,
-            MSG_LABEL, "",
-            JOptionPane.PLAIN_MESSAGE,
-            JOptionPane.INFORMATION_MESSAGE,
-            null,
-            options,
-            options[0]);
+              MSG_LABEL, "",
+              JOptionPane.PLAIN_MESSAGE,
+              JOptionPane.INFORMATION_MESSAGE,
+              null,
+              options,
+              options[0]);
    }
 
    public static void showOkMsg(final String infoMsg)
@@ -81,9 +78,9 @@ public class Dialogs
    {
       Object[] options = {"Ok"};
       String lastOctet = (String) JOptionPane.showInputDialog(null,
-            "Choose unique client number [1..254]:",
-            "Start as local only client?",
-            JOptionPane.PLAIN_MESSAGE, null, null, null);
+              "Choose unique client number [1..254]:",
+              "Start as local only client?",
+              JOptionPane.PLAIN_MESSAGE, null, null, null);
 
 
       if (lastOctet != null) {

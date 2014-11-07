@@ -4,9 +4,7 @@ import controller.GameEngine;
 import gui.Dialogs;
 import net.protocol.Message;
 
-/**
- * Created by citizen4 on 04.11.2014.
- */
+
 public class PeerReady extends GameStateAdapter
 {
 

@@ -7,12 +7,11 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-/**
- * Created by citizen4 on 03.11.2014.
- */
 public class MainMenuBar extends JMenuBar
 {
-   private static final String MENU_NAME = "Menu";
+   private static final String MENU_APP = "App";
+   private static final String MENU_PLAYER = "Player";
+   private static final String MENU_GAME = "Game";
 
    private JMenuItem connectItem = null;
    private JMenuItem disconnectItem = null;
@@ -27,13 +26,16 @@ public class MainMenuBar extends JMenuBar
 
    private void setupMenuBar()
    {
-      JMenu gameMenu = new JMenu(MENU_NAME);
+      JMenu appMenu = new JMenu(MENU_APP);
+      JMenu playerMenu = new JMenu(MENU_PLAYER);
+      JMenu gameMenu = new JMenu(MENU_GAME);
+
       MenuAction menuAction = new MenuAction();
 
-      connectItem = new JMenuItem("Connect Player...");
+      connectItem = new JMenuItem("Connect...");
       connectItem.setActionCommand(ActionCmd.CONNECT_PEER_CMD);
       connectItem.addActionListener(menuAction);
-      disconnectItem = new JMenuItem("Disconnect Player");
+      disconnectItem = new JMenuItem("Disconnect");
       disconnectItem.setActionCommand(ActionCmd.DISCONNECT_PEER_CMD);
       disconnectItem.addActionListener(menuAction);
       newGameItem = new JMenuItem("Start New Game");
@@ -46,12 +48,14 @@ public class MainMenuBar extends JMenuBar
       quitGameItem.setActionCommand(ActionCmd.QUIT_APP_CMD);
       quitGameItem.addActionListener(menuAction);
 
-      gameMenu.add(connectItem);
-      gameMenu.add(disconnectItem);
+      playerMenu.add(connectItem);
+      playerMenu.add(disconnectItem);
       gameMenu.add(newGameItem);
       gameMenu.add(abortGameItem);
-      gameMenu.add(quitGameItem);
+      appMenu.add(quitGameItem);
 
+      add(appMenu);
+      add(playerMenu);
       add(gameMenu);
    }
 

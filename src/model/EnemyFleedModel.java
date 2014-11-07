@@ -1,10 +1,5 @@
 package model;
 
-import org.pmw.tinylog.Logger;
-
-/**
- * Created by an unknown Java student on 11/3/14.
- */
 public class EnemyFleedModel extends AbstractFleedModel
 {
    public EnemyFleedModel(final ModelUpdateListener updateListener)

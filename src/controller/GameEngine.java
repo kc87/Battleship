@@ -14,15 +14,10 @@ import model.OwnFleedModel;
 import model.Ship;
 import net.NetController;
 import net.protocol.Message;
-import org.pmw.tinylog.Logger;
 
 import java.util.ArrayList;
 
-/**
- * Created by citizen4 on 03.11.2014.
- * <p/>
- * Main Game Controller Singleton
- */
+
 public final class GameEngine implements NetController.Listener, ShotClock.TimeIsUpListener
 {
    private static final GameEngine INSTANCE = new GameEngine();
@@ -36,6 +31,7 @@ public final class GameEngine implements NetController.Listener, ShotClock.TimeI
    private StateListener stateListener = null;
    private ScoreListener scoreListener = null;
    private boolean myTurnFlag = false;
+   private boolean gotAWinner = false;
    private IGameState currentState = new Started(this);
 
 
@@ -135,7 +131,7 @@ public final class GameEngine implements NetController.Listener, ShotClock.TimeI
       currentState.shoot(i, j);
    }
 
-   // TODO: This method obviously needs some refactoring ;)
+   // FIXME: This method obviously needs some refactoring ;)
    @Override
    public void onMessage(Message msg, final String peerId)
    {
@@ -206,7 +202,10 @@ public final class GameEngine implements NetController.Listener, ShotClock.TimeI
                   setPlayerEnabled(true);
                   shotClock.stop();
                   setState(new PeerReady(this));
-                  Dialogs.showOkMsg("Game aborted by peer!");
+                  //FIXME
+                  if (!gotAWinner) {
+                     Dialogs.showOkMsg("Game aborted by peer!");
+                  }
                }
 
                if (msg.SUB_TYPE == Message.TIMEOUT) {
@@ -229,10 +228,11 @@ public final class GameEngine implements NetController.Listener, ShotClock.TimeI
                      enemyFleedModel.update(i, j, resultFlag, ship);
 
                      if (enemyFleedModel.isFleedDestroyed()) {
-                        Logger.debug("You are the Winner!");
-                        Dialogs.showInfoThread("You are the Winner!");
+                        gotAWinner = true;
                         scoreListener.onScoreUpdate(ownFleedModel.getShipsLeft(), 0);
+                        //FIXME: should be currentState.finishGame();
                         currentState.abortGame();
+                        Dialogs.showInfoThread("You are the Winner!");
                         return;
                      }
 
@@ -251,9 +251,9 @@ public final class GameEngine implements NetController.Listener, ShotClock.TimeI
                      netController.sendMessage(msg, connectedPeerId.split(":")[0]);
 
                      if (ownFleedModel.isFleedDestroyed()) {
-                        Logger.debug("You lose!");
-                        Dialogs.showInfoThread("You lose!");
+                        gotAWinner = true;
                         scoreListener.onScoreUpdate(0, enemyFleedModel.getShipsLeft());
+                        Dialogs.showInfoThread("You lose!");
                         return;
                      }
 
@@ -277,6 +277,7 @@ public final class GameEngine implements NetController.Listener, ShotClock.TimeI
 
    private void startNewGame()
    {
+      gotAWinner = false;
       ownFleedModel = new OwnFleedModel(ownFleedModelUpdateListener);
       enemyFleedModel = new EnemyFleedModel(enemyFleedModelUpdateListener);
       scoreListener.onScoreUpdate(AbstractFleedModel.NUMBER_OF_SHIPS, AbstractFleedModel.NUMBER_OF_SHIPS);

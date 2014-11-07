@@ -5,9 +5,6 @@ import model.AbstractFleedModel;
 
 import javax.swing.border.TitledBorder;
 
-/**
- * Created by an unknown Java student on 11/3/14.
- */
 public class EnemyFleedView extends AbstractFleedView implements ShotClock.TickListener
 {
    public EnemyFleedView(final GridButtonHandler gridButtonHandler)

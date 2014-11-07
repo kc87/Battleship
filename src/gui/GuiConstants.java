@@ -4,9 +4,6 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 
-/**
- * Created by citizen4 on 03.11.2014.
- */
 public interface GuiConstants
 {
    public static final String DEAD_SYMBOL = "\u2620";

@@ -1,8 +1,5 @@
 package controller.state;
 
-/**
- * Created by an unknown Java student on 11/4/14.
- */
 public abstract class GameStateAdapter implements IGameState
 {
    @Override

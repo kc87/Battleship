@@ -7,9 +7,6 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 
-/**
- * Created by citizen4 on 03.11.2014.
- */
 public class MainStatusBar extends JPanel implements GameEngine.StateListener
 {
    public static final int HEIGHT = 26;

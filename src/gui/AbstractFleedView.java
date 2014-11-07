@@ -8,27 +8,25 @@ import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.util.ArrayList;
 
-/**
- * Created by an unknown Java student on 11/3/14.
- */
 public abstract class AbstractFleedView extends JPanel implements AbstractFleedModel.ModelUpdateListener
 {
    private static final String[] ALPHA_SCALE = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J"};
    private static final String MY_TITLE = "My Fleed";
-   protected static final String ENEMY_TITLE = "Enemy Fleed";
    private static final int GRID_SIZE = 380;
-
    private JPanel nNumberScale;
+
    private JPanel sNumberScale;
    private JPanel eAlphaScale;
    private JPanel wAlphaScale;
-
    private GridButtonHandler gridButtonHandler = null;
+
+   private boolean hideInactiveGrid = true;
    private boolean isEnemy = false;
    private boolean isEnabled = true;
    private ArrayList<Color> gridButtonColors = new ArrayList<>();
 
    protected static final int DIM = SeaArea.DIM;
+   protected static final String ENEMY_TITLE = "Enemy Fleed";
    protected JPanel seaGridPanel;
    protected SeaGridButton[][] gridButtons = new SeaGridButton[DIM][DIM];
    protected TitledBorder panelTitleBorder = null;
@@ -94,8 +92,8 @@ public abstract class AbstractFleedView extends JPanel implements AbstractFleedM
                // gray out grid to mark it inactive
                Color bgColor = gridButton.getBackground();
                float[] bgRgb = bgColor.getRGBColorComponents(null);
-               float gray = 0.2126f * bgRgb[0] + 0.7152f * bgRgb[1] + 0.0722f * bgRgb[2];
-               //float gray = 0.6f;
+               //TODO: Make it a user selectable option
+               float gray = hideInactiveGrid ? 0.6f : 0.2126f * bgRgb[0] + 0.7152f * bgRgb[1] + 0.0722f * bgRgb[2];
                gridButton.setBackground(new Color(gray, gray, gray));
                gridButton.setBorder(GuiConstants.WATER_BORDER_GRAY);
                gridButton.setCursor(GuiConstants.PASSIVE_GRID_CURSOR);
@@ -131,7 +129,7 @@ public abstract class AbstractFleedView extends JPanel implements AbstractFleedM
    private void setupFleedView()
    {
       panelTitleBorder = BorderFactory.createTitledBorder(GuiConstants.GRID_PANEL_BORDER,
-            (isEnemy ? ENEMY_TITLE : MY_TITLE), TitledBorder.CENTER, TitledBorder.TOP);
+              (isEnemy ? ENEMY_TITLE : MY_TITLE), TitledBorder.CENTER, TitledBorder.TOP);
       setLayout(new BorderLayout());
       setPreferredSize(new Dimension(GRID_SIZE, GRID_SIZE));
       setBorder(panelTitleBorder);

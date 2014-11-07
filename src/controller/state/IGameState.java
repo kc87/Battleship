@@ -1,12 +1,5 @@
 package controller.state;
 
-import net.NetController;
-
-/**
- * Created by citizen4 on 03.11.2014.
- * <p/>
- * Defines state transitions
- */
 public interface IGameState
 {
    public void startNetReveiver();

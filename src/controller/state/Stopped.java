@@ -1,12 +1,7 @@
 package controller.state;
 
 import controller.GameEngine;
-import net.NetController;
-import sun.nio.ch.Net;
 
-/**
- * Created by citizen4 on 04.11.2014.
- */
 public class Stopped extends GameStateAdapter
 {
    private GameEngine engine = null;

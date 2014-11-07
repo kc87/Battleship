@@ -1,10 +1,5 @@
 package model;
 
-import java.util.Arrays;
-
-/**
- * Created by an unknown Java student on 11/3/14.
- */
 public abstract class AbstractFleedModel
 {
    public static final int NUMBER_OF_SHIPS = 10;

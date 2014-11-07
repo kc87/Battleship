@@ -5,9 +5,6 @@ import gui.Dialogs;
 import gui.MainView;
 import org.pmw.tinylog.Logger;
 
-/**
- * Created by an unknown Java student on 11/2/14.
- */
 public class Main
 {
    public static final String TITLE = "P2P Battleship";
