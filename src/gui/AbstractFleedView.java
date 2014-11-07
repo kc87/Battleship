@@ -20,7 +20,7 @@ public abstract class AbstractFleedView extends JPanel implements AbstractFleedM
    private JPanel wAlphaScale;
    private GridButtonHandler gridButtonHandler = null;
 
-   private boolean hideInactiveGrid = true;
+   private boolean hideInactiveGrid = false;
    private boolean isEnemy = false;
    private boolean isEnabled = true;
    private ArrayList<Color> gridButtonColors = new ArrayList<>();

@@ -14,6 +14,7 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 
 public class NetController
 {
@@ -127,11 +128,11 @@ public class NetController
          recvSocket = new DatagramSocket(null);
 
          if (Main.localBindAddress == null) {
+            Main.localBindAddress = InetAddress.getLocalHost().getHostAddress();
             recvSockAddress = new InetSocketAddress(PORT);
             recvSocket.bind(recvSockAddress);
             sendSocket = new DatagramSocket(0);
          } else {
-            Logger.debug("Bind address is: " + Main.localBindAddress);
             recvSockAddress = new InetSocketAddress(Main.localBindAddress, PORT);
             recvSocket.bind(recvSockAddress);
 
@@ -140,9 +141,13 @@ public class NetController
             sendSocket.bind(sendSockAddress);
          }
 
+         Logger.debug("Bind address is: " + Main.localBindAddress);
+
          recvSocket.setSoTimeout(500);
 
       } catch (SocketException e) {
+         Logger.error(e);
+      } catch (UnknownHostException e) {
          Logger.error(e);
       }
    }

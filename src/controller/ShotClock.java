@@ -5,7 +5,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class ShotClock
 {
-   private static final int TIMEOUT = 4;
+   private static final int TIMEOUT = 9;
    private Thread shotClockThread = null;
    private volatile AtomicInteger timeout = new AtomicInteger(TIMEOUT);
    private volatile AtomicBoolean isStopped = new AtomicBoolean(false);
