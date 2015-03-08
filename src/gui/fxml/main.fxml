@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+
+<fx:root type="javafx.scene.layout.VBox" stylesheets="@main.css" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <MenuBar>
+        <menus>
+          <Menu fx:id="fileMenu" mnemonicParsing="false" text="File">
+            <items>
+              <MenuItem fx:id="quitAppItem" mnemonicParsing="false" text="Quit" />
+            </items>
+          </Menu>
+            <Menu fx:id="playerMenu" mnemonicParsing="false" text="Player">
+            <items>
+              <MenuItem fx:id="connectPlayerItem" mnemonicParsing="false" text="Connect..." />
+              <MenuItem fx:id="disconnectPlayerItem" mnemonicParsing="false" text="Disconnect" />
+            </items>
+          </Menu>
+            <Menu fx:id="gameMenu" mnemonicParsing="false" text="Game">
+            <items>
+              <MenuItem fx:id="newGameItem" mnemonicParsing="false" text="New Game" />
+              <MenuItem fx:id="abortGameItem" mnemonicParsing="false" text="Abort Game" />
+              <MenuItem fx:id="quitGameItem" mnemonicParsing="false" text="Quit Game" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem mnemonicParsing="false" text="About" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+      <HBox fx:id="fleetViewContainer" VBox.vgrow="ALWAYS">
+      </HBox>
+      <HBox alignment="CENTER" fx:id="StatusBar" prefHeight="39.0" prefWidth="752.0" VBox.vgrow="NEVER">
+         <children>
+            <Label prefHeight="25.0" prefWidth="250.0" text="State:" />
+            <Region prefHeight="39.0" prefWidth="514.0" HBox.hgrow="SOMETIMES" />
+            <Label prefHeight="25.0" prefWidth="329.0" text="FooBar:" />
+         </children>
+      </HBox>
+   </children>
+</fx:root>

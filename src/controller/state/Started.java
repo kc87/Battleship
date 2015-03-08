@@ -13,7 +13,7 @@ public class Started extends GameStateAdapter
    }
 
    @Override
-   public void startNetReveiver()
+   public void startNetReceiver()
    {
       engine.getNetController().startReceiverThread();
       engine.setState(new Disconnected(engine));

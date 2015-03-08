@@ -19,7 +19,7 @@ import java.net.UnknownHostException;
 public class NetController
 {
    private static final int PORT = 60000;
-   private DatagramSocket recvSocket = null;
+   private DatagramSocket rcvSocket = null;
    private DatagramSocket sendSocket = null;
    private Thread receiverThread = null;
    private Listener listener = null;
@@ -35,35 +35,30 @@ public class NetController
    {
       if (receiverThread == null || !receiverThread.isAlive()) {
 
-         receiverThread = new Thread(new Runnable()
-         {
-            @Override
-            public void run()
-            {
-               Logger.info("Receiver thread started...");
-               String msg, id;
+         receiverThread = new Thread(() -> {
+            Logger.info("Receiver thread started...");
+            String msg, id;
 
-               while (!receiverThread.isInterrupted()) {
-                  byte[] packetData = new byte[1024];
-                  DatagramPacket packet = new DatagramPacket(packetData, packetData.length);
-                  try {
-                     // blocking call
-                     recvSocket.receive(packet);
-                     id = packet.getAddress().getHostAddress() + ":" + packet.getPort();
-                     msg = new String(packet.getData(), "UTF-8");
-                     parsePacket(msg, id);
-                  } catch (IOException e) {
-                     if (!(e instanceof SocketTimeoutException)) {
-                        Logger.error(e);
-                     }
+            while (!receiverThread.isInterrupted()) {
+               byte[] packetData = new byte[1024];
+               DatagramPacket packet = new DatagramPacket(packetData, packetData.length);
+               try {
+                  // blocking call
+                  rcvSocket.receive(packet);
+                  id = packet.getAddress().getHostAddress() + ":" + packet.getPort();
+                  msg = new String(packet.getData(), "UTF-8");
+                  parsePacket(msg, id);
+               } catch (IOException e) {
+                  if (!(e instanceof SocketTimeoutException)) {
+                     Logger.error(e);
                   }
                }
-
-               recvSocket.close();
-               recvSocket = null;
-
-               Logger.debug("Out of while loop");
             }
+
+            rcvSocket.close();
+            rcvSocket = null;
+
+            Logger.debug("Out of while loop");
          }, "ReceiverThread");
 
          receiverThread.start();
@@ -72,7 +67,7 @@ public class NetController
 
    public void stopReceiverThread()
    {
-      Logger.info("Stopping Reveiver Thread");
+      Logger.info("Stopping Receiver Thread");
       if (receiverThread != null && receiverThread.isAlive()) {
          receiverThread.interrupt();
       }
@@ -84,19 +79,14 @@ public class NetController
       final Gson gson = new Gson();
       Logger.debug("Send: " + gson.toJson(message) + " to: " + peerAddress);
 
-      new Thread(new Runnable()
-      {
-         @Override
-         public void run()
-         {
-            try {
-               byte[] pktData = gson.toJson(message).getBytes("UTF-8");
-               DatagramPacket packet = new DatagramPacket(pktData, pktData.length,
-                       InetAddress.getByName(peerAddress), PORT);
-               sendSocket.send(packet);
-            } catch (IOException e) {
-               Logger.error(e);
-            }
+      new Thread(() -> {
+         try {
+            byte[] pktData = gson.toJson(message).getBytes("UTF-8");
+            DatagramPacket packet = new DatagramPacket(pktData, pktData.length,
+                    InetAddress.getByName(peerAddress), PORT);
+            sendSocket.send(packet);
+         } catch (IOException e) {
+            Logger.error(e);
          }
       }, "SendThread").start();
    }
@@ -104,11 +94,11 @@ public class NetController
 
    private void parsePacket(String jsonMsg, final String peerId)
    {
-      Gson gson = new GsonBuilder().serializeNulls().create();//new Gson();
+      Gson gson = new GsonBuilder().serializeNulls().create();
 
       try {
          jsonMsg = jsonMsg.trim();
-         Logger.debug("Recv.:" + jsonMsg + " from: " + peerId);
+         Logger.debug("Rcv.:" + jsonMsg + " from: " + peerId);
          Message newMsg = gson.fromJson(jsonMsg, Message.class);
          listener.onMessage(newMsg, peerId);
       } catch (JsonSyntaxException e) {
@@ -125,16 +115,16 @@ public class NetController
       // Bind receiver socket first to prevent port collision
       try {
 
-         recvSocket = new DatagramSocket(null);
+         rcvSocket = new DatagramSocket(null);
 
          if (Main.localBindAddress == null) {
             Main.localBindAddress = InetAddress.getLocalHost().getHostAddress();
             recvSockAddress = new InetSocketAddress(PORT);
-            recvSocket.bind(recvSockAddress);
+            rcvSocket.bind(recvSockAddress);
             sendSocket = new DatagramSocket(0);
          } else {
             recvSockAddress = new InetSocketAddress(Main.localBindAddress, PORT);
-            recvSocket.bind(recvSockAddress);
+            rcvSocket.bind(recvSockAddress);
 
             sendSockAddress = new InetSocketAddress(Main.localBindAddress, 0);
             sendSocket = new DatagramSocket(null);
@@ -143,11 +133,9 @@ public class NetController
 
          Logger.debug("Bind address is: " + Main.localBindAddress);
 
-         recvSocket.setSoTimeout(500);
+         rcvSocket.setSoTimeout(500);
 
-      } catch (SocketException e) {
-         Logger.error(e);
-      } catch (UnknownHostException e) {
+      } catch (SocketException | UnknownHostException e) {
          Logger.error(e);
       }
    }
@@ -155,7 +143,6 @@ public class NetController
    public interface Listener
    {
       public void onMessage(final Message newMsg, final String peerId);
-
-      public void onError(final String errMsg);
+      //public void onError(final String errMsg);
    }
 }

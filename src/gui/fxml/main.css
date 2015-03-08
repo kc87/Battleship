@@ -1,0 +1,13 @@
+#StatusBar {
+
+    -fx-background-color: bisque;
+    -fx-border-width: 2px;
+}
+
+
+#StatusBar > .Label {
+
+    -fx-background-color: #f00;
+    -fx-padding: 4px;
+    -fx-start-margin: 5;
+}

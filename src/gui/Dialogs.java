@@ -1,74 +1,82 @@
 package gui;
 
+
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.TextInputDialog;
 import org.pmw.tinylog.Logger;
 
-import javax.swing.*;
-import java.awt.*;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Optional;
+
 
 public class Dialogs
 {
-   // is used as a handel to get JOptionPane window
-   public static final JLabel MSG_LABEL = new JLabel();
+   private static Alert openAlert = null;
 
-   public static void showInfoThread(final String infoMsg)
+   public static void closeCancelMsg()
    {
-      new Thread(new Runnable()
-      {
-         @Override
-         public void run()
-         {
-            JOptionPane.showMessageDialog(null, infoMsg);
+      Platform.runLater( () -> {
+         if (Dialogs.openAlert != null) {
+            Dialogs.openAlert.close();
+            openAlert = null;
          }
-      }).start();
+      });
    }
 
-   public static void closeMsgDialog()
+   public static boolean showCancelMsg(final String infoMsg)
    {
-      Window window = SwingUtilities.getWindowAncestor(MSG_LABEL);
-      if (window != null) {
-         window.dispose();
+      Alert alert = new Alert(Alert.AlertType.INFORMATION);
+      alert.setTitle("Confirmation");
+      alert.setHeaderText(null);
+      alert.setContentText(infoMsg);
+      alert.getButtonTypes().setAll(ButtonType.CANCEL);
+
+      Dialogs.openAlert = alert;
+
+      Optional<ButtonType> result = alert.showAndWait();
+
+      if (result.isPresent() && result.get() == ButtonType.CANCEL) {
+         Dialogs.openAlert = null;
+         return false;
+      } else {
+         return true;
       }
-   }
-
-   public static int showCancelMsg(final String infoMsg)
-   {
-      Object[] options = {"Abort"};
-      MSG_LABEL.setText(infoMsg);
-      return JOptionPane.showOptionDialog(null,
-              MSG_LABEL, "",
-              JOptionPane.PLAIN_MESSAGE,
-              JOptionPane.INFORMATION_MESSAGE,
-              null,
-              options,
-              options[0]);
    }
 
    public static void showOkMsg(final String infoMsg)
    {
-      MSG_LABEL.setText(infoMsg);
-      JOptionPane.showMessageDialog(null, MSG_LABEL);
+      Platform.runLater( () -> {
+         Alert alert = new Alert(Alert.AlertType.INFORMATION);
+         alert.setTitle("Information");
+         alert.setHeaderText(null);
+         alert.setContentText(infoMsg);
+         alert.showAndWait();
+      });
    }
 
-   public static boolean confirmQuittingGame()
-   {
-      int option = JOptionPane.showConfirmDialog(null, "Quit Game?");
-      return (option == JOptionPane.OK_OPTION);
-   }
 
    public static String requestPeerIp()
    {
-      String ip = JOptionPane.showInputDialog(null, "Player IP",
-              "Please provide Player IP address", JOptionPane.QUESTION_MESSAGE);
-      try {
-         InetAddress a = InetAddress.getByName(ip);
-      } catch (UnknownHostException e) {
-         Logger.error(e);
-         return null;
+      TextInputDialog dialog = new TextInputDialog();
+      dialog.setTitle("Peer IP");
+      dialog.setHeaderText("Enter the IP of the Peer you want to play with");
+      dialog.setContentText("Peer IP:");
+
+      Optional<String> ip = dialog.showAndWait();
+
+      if(ip.isPresent()) {
+         try {
+            InetAddress.getByName(ip.get());
+            return ip.get();
+         } catch (UnknownHostException e) {
+            Logger.error(e);
+         }
       }
 
-      return ip;
+      return null;
    }
 
    /**
@@ -76,25 +84,22 @@ public class Dialogs
     */
    public static String requestLocalBindIp()
    {
-      Object[] options = {"Ok"};
-      String lastOctet = (String) JOptionPane.showInputDialog(null,
-              "Choose unique client number [1..254]:",
-              "Start as local only client?",
-              JOptionPane.PLAIN_MESSAGE, null, null, null);
+      TextInputDialog dialog = new TextInputDialog();
+      dialog.setTitle("Start as local only client?");
+      dialog.setHeaderText("Choose a local unique client number");
+      dialog.setContentText("[1..254]:");
 
+      Optional<String> lastOctet = dialog.showAndWait();
 
-      if (lastOctet != null) {
-
+      if (lastOctet.isPresent()) {
          try {
-            int octet = Integer.parseInt(lastOctet);
-            if (octet > 254 || octet < 1) {
-               return null;
+            int octet = Integer.parseInt(lastOctet.get());
+            if (octet > 0 && octet < 255) {
+               return "127.0.0." + lastOctet.get();
             }
          } catch (NumberFormatException e) {
-            return null;
+            /* IGNORED */
          }
-
-         return "127.0.0." + lastOctet;
       }
 
       return null;

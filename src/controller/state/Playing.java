@@ -14,7 +14,7 @@ public class Playing extends GameStateAdapter
    }
 
    @Override
-   public void startNetReveiver()
+   public void startNetReceiver()
    {
       // should never happen
    }
@@ -50,17 +50,6 @@ public class Playing extends GameStateAdapter
       engine.setPlayerEnabled(true);
       engine.getShotClock().stop();
       engine.setState(new PeerReady(engine));
-   }
-
-   @Override
-   public void shoot(final int i, final int j)
-   {
-      Message bombMsg = new Message();
-      bombMsg.TYPE = Message.GAME;
-      bombMsg.SUB_TYPE = Message.SHOOT;
-      bombMsg.PAYLOAD = new Object[]{i, j};
-      engine.getNetController().sendMessage(bombMsg, engine.getConnectedPeerId().split(":")[0]);
-      engine.getShotClock().reset();
    }
 
 

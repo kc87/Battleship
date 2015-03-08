@@ -1,14 +1,15 @@
 package model;
 
-public class EnemyFleedModel extends AbstractFleedModel
+public class EnemyFleetModel extends AbstractFleetModel
 {
-   public EnemyFleedModel(final ModelUpdateListener updateListener)
+   public EnemyFleetModel(final ModelUpdateListener updateListener)
    {
       super(updateListener);
-      listener.onTotalUpdate(this);
+      if(listener != null) {
+         listener.onTotalUpdate(this);
+      }
    }
 
-   //@Override
    public void update(final int i, final int j, final int resultFlag, final Ship ship)
    {
       if (ship != null) {

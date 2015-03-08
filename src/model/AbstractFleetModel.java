@@ -1,6 +1,6 @@
 package model;
 
-public abstract class AbstractFleedModel
+public abstract class AbstractFleetModel
 {
    public static final int NUMBER_OF_SHIPS = 10;
    public static final int MISS = 400;
@@ -8,13 +8,13 @@ public abstract class AbstractFleedModel
    public static final int AGAIN = 200;
    public static final int DESTROYED = 500;
 
-   protected static final int DIM = SeaArea.DIM;
+   protected static final int DIM = 10;
    protected int[][] seaGrid = new int[(DIM + 2)][(DIM + 2)];
    protected Ship[] ships = new Ship[NUMBER_OF_SHIPS];
    protected int shipsDestroyed = 0;
    protected ModelUpdateListener listener = null;
 
-   public AbstractFleedModel(final ModelUpdateListener listener)
+   public AbstractFleetModel(final ModelUpdateListener listener)
    {
       this.listener = listener;
    }
@@ -24,7 +24,7 @@ public abstract class AbstractFleedModel
       return NUMBER_OF_SHIPS - shipsDestroyed;
    }
 
-   public boolean isFleedDestroyed()
+   public boolean isFleetDestroyed()
    {
       return shipsDestroyed == NUMBER_OF_SHIPS;
    }
@@ -47,9 +47,9 @@ public abstract class AbstractFleedModel
 
    public interface ModelUpdateListener
    {
-      public void onTotalUpdate(final AbstractFleedModel model);
+      public void onTotalUpdate(final AbstractFleetModel model);
 
-      public void onPartialUpdate(final AbstractFleedModel model, final int i, final int j, final int flag);
+      public void onPartialUpdate(final AbstractFleetModel model, final int i, final int j, final int flag);
    }
 
 }

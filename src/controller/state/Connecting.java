@@ -14,7 +14,7 @@ public class Connecting extends GameStateAdapter
    }
 
    @Override
-   public void startNetReveiver()
+   public void startNetReceiver()
    {
 
    }

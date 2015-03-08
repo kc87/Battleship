@@ -16,7 +16,7 @@ public class Disconnected extends GameStateAdapter
    }
 
    @Override
-   public void startNetReveiver()
+   public void startNetReceiver()
    {
       Logger.warn("Net Receiver already up and running");
    }
@@ -30,7 +30,7 @@ public class Disconnected extends GameStateAdapter
          connectMsg.SUB_TYPE = Message.CONNECT;
          engine.getNetController().sendMessage(connectMsg, peerIp);
          engine.setState(new Connecting(engine));
-         if (Dialogs.showCancelMsg("Connecting...") == 0) {
+         if (Dialogs.showCancelMsg("Connecting...")) {
             //connection attempt aborted by user
             engine.setState(new Disconnected(engine));
          }

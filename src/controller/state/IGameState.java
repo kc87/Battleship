@@ -2,7 +2,7 @@ package controller.state;
 
 public interface IGameState
 {
-   public void startNetReveiver();
+   public void startNetReceiver();
 
    public void connectPeer();
 
@@ -14,6 +14,4 @@ public interface IGameState
 
    public void stopNetReceiver();
 
-   public void shoot(final int i, final int j);
-   //...
 }

@@ -3,7 +3,7 @@ package controller.state;
 public abstract class GameStateAdapter implements IGameState
 {
    @Override
-   public void startNetReveiver()
+   public void startNetReceiver()
    {
    }
 
@@ -29,11 +29,6 @@ public abstract class GameStateAdapter implements IGameState
 
    @Override
    public void stopNetReceiver()
-   {
-   }
-
-   @Override
-   public void shoot(final int i, final int j)
    {
    }
 }

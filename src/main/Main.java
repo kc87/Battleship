@@ -2,46 +2,50 @@ package main;
 
 import controller.GameEngine;
 import gui.Dialogs;
-import gui.MainView;
+import gui.controller.MainView;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 import org.pmw.tinylog.Logger;
 
-public class Main
+public class Main extends Application
 {
-   public static final String TITLE = "P2P Battleship";
-   public static final String VERSION = "0.8";
+   public static final String TITLE = "P2P Battleship (FX8)";
+   public static final String VERSION = "v0.1";
    public static String localBindAddress = null;
-   public static MainView mainView = null;
 
-   public static void startApplication()
+   @Override
+   public void init()
+   {
+      Logger.debug("Application.init()");
+   }
+
+   @Override
+   public void start(Stage mainStage) throws Exception
    {
       localBindAddress = Dialogs.requestLocalBindIp();
-      GameEngine.getInstance().startNetReveiver();
+      GameEngine.getInstance().startNetReceiver();
 
-      javax.swing.SwingUtilities.invokeLater(new Runnable()
-      {
-         public void run()
-         {
-            Logger.debug("Invoking MainView...");
-            mainView = new MainView(localBindAddress != null ? " [" + localBindAddress + "]" : "");
-            mainView.setVisible(true);
-         }
-      });
+      String title = TITLE + " " + VERSION +
+                    (localBindAddress != null ? " ["+localBindAddress+"]" : "");
+
+      mainStage.setTitle(title);
+      mainStage.setScene(new Scene(new MainView()));;
+      mainStage.show();
    }
 
-   public static void quitApplication()
+   @Override
+   public void stop()
    {
-      //if (Dialogs.confirmQuittingGame()) {
+      Logger.debug("Application.stop()");
       GameEngine.getInstance().getShotClock().shutdown();
       GameEngine.getInstance().stopNetReceiver();
-      Logger.debug("Closing main window and exit.");
-      mainView.dispose();
-      System.exit(0);
-      //}
+      Logger.info("Closing main window and exit.");
    }
 
-   public static void main(final String[] args)
+
+   public static void main(String[] args)
    {
-      Main.startApplication();
+      Application.launch(args);
    }
-
 }

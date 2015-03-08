@@ -36,7 +36,9 @@ public class ShotClock
 
    public void stop()
    {
-      tickListener.onTick(TIMEOUT + 1);
+      if(tickListener != null) {
+         tickListener.onTick(TIMEOUT + 1);
+      }
       isStopped.set(true);
    }
 
@@ -44,7 +46,9 @@ public class ShotClock
    {
       timeout.set(TIMEOUT);
       isStopped.set(false);
-      tickListener.onTick(TIMEOUT + 1);
+      if(tickListener != null) {
+         tickListener.onTick(TIMEOUT + 1);
+      }
 
       if (shotClockThread == null) {
          startThread();

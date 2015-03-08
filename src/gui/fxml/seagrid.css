@@ -1,0 +1,39 @@
+.Sea {
+    -fx-background-color: navy;
+}
+
+.SeaTile {
+
+    -fx-border-color: navy;
+    -fx-border-width: 2px;
+    -fx-background-color: aqua;
+}
+
+.SeaTile:hover {
+    -fx-border-color: sandybrown;
+}
+
+.SeaTile:disabled {
+    -fx-background-color: dimgrey;
+    -fx-border-color: grey;
+}
+
+.Ship {
+    -fx-background-color: black;
+}
+
+.Water {
+    -fx-background-color: aqua;
+}
+
+.Hit {
+    -fx-background-color: red;
+}
+
+.Miss {
+    -fx-background-color: dodgerblue;
+}
+
+.Destroyed {
+    -fx-background-color: yellow;
+}

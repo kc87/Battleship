@@ -1,15 +1,13 @@
 package model;
 
-import org.pmw.tinylog.Logger;
 
-
-public class OwnFleedModel extends AbstractFleedModel
+public class OwnFleetModel extends AbstractFleetModel
 {
 
-   public OwnFleedModel(final ModelUpdateListener updateListener)
+   public OwnFleetModel(final ModelUpdateListener updateListener)
    {
       super(updateListener);
-      placeNewFleed();
+      placeNewFleet();
    }
 
    // Update the model based on shoot at i,j
@@ -17,10 +15,8 @@ public class OwnFleedModel extends AbstractFleedModel
    {
       int gridValue = seaGrid[i + 1][j + 1];
 
-      Logger.debug("gridValue:" + gridValue);
-
       // You hit that before
-      if (gridValue < 0 || gridValue == AbstractFleedModel.MISS) {
+      if (gridValue < 0 || gridValue == AbstractFleetModel.MISS) {
          return new Object[]{AGAIN, null};
       }
 
@@ -32,7 +28,7 @@ public class OwnFleedModel extends AbstractFleedModel
             return new Object[]{AGAIN, null};
          }
 
-         //boom beng:
+         //boom bang:
          ship.hit();
 
          if (ship.isDestroyed()) {
@@ -46,19 +42,19 @@ public class OwnFleedModel extends AbstractFleedModel
             return new Object[]{DESTROYED, ship};
          } else {
             seaGrid[i + 1][j + 1] = -gridValue;
-            listener.onPartialUpdate(this, i, j, AbstractFleedModel.HIT);
+            listener.onPartialUpdate(this, i, j, AbstractFleetModel.HIT);
             return new Object[]{HIT, null};
          }
       }
 
-      seaGrid[i + 1][j + 1] = AbstractFleedModel.MISS;
-      listener.onPartialUpdate(this, i, j, AbstractFleedModel.MISS);
+      seaGrid[i + 1][j + 1] = AbstractFleetModel.MISS;
+      listener.onPartialUpdate(this, i, j, AbstractFleetModel.MISS);
       return new Object[]{MISS, null};
    }
 
-   private void placeNewFleed()
+   private void placeNewFleet()
    {
-      while (createFleet() < NUMBER_OF_SHIPS) ;
+      while (createFleet() < NUMBER_OF_SHIPS)/*EMPTY*/;
       listener.onTotalUpdate(this);
    }
 

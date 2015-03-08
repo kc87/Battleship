@@ -6,11 +6,10 @@ import controller.state.PeerReady;
 import controller.state.Playing;
 import controller.state.Started;
 import gui.Dialogs;
-import gui.EnemyFleedView;
-import model.AbstractFleedModel;
-import model.AbstractFleedModel.ModelUpdateListener;
-import model.EnemyFleedModel;
-import model.OwnFleedModel;
+import model.AbstractFleetModel;
+import model.AbstractFleetModel.ModelUpdateListener;
+import model.EnemyFleetModel;
+import model.OwnFleetModel;
 import model.Ship;
 import net.NetController;
 import net.protocol.Message;
@@ -24,12 +23,17 @@ public final class GameEngine implements NetController.Listener, ShotClock.TimeI
    private ShotClock shotClock = null;
    private String connectedPeerId = null;
    private NetController netController = null;
-   private OwnFleedModel ownFleedModel = null;
-   private EnemyFleedModel enemyFleedModel = null;
-   private ModelUpdateListener ownFleedModelUpdateListener = null;
-   private ModelUpdateListener enemyFleedModelUpdateListener = null;
+
+
+   private OwnFleetModel ownFleetModel = null;
+   private EnemyFleetModel enemyFleetModel = null;
+
+
+   private ModelUpdateListener ownFleetModelUpdateListener = null;
+   private ModelUpdateListener enemyFleetModelUpdateListener = null;
+
    private StateListener stateListener = null;
-   private ScoreListener scoreListener = null;
+   //private ScoreListener scoreListener = null;
    private boolean myTurnFlag = false;
    private boolean gotAWinner = false;
    private IGameState currentState = new Started(this);
@@ -47,10 +51,11 @@ public final class GameEngine implements NetController.Listener, ShotClock.TimeI
       return INSTANCE;
    }
 
+
    public void setModelUpdateListener(final ModelUpdateListener own, final ModelUpdateListener enemy)
    {
-      ownFleedModelUpdateListener = own;
-      enemyFleedModelUpdateListener = enemy;
+      ownFleetModelUpdateListener = own;
+      enemyFleetModelUpdateListener = enemy;
    }
 
    public void setStateListener(final StateListener listener)
@@ -58,10 +63,11 @@ public final class GameEngine implements NetController.Listener, ShotClock.TimeI
       stateListener = listener;
    }
 
+   /*
    public void setScoreListener(final ScoreListener listener)
    {
       scoreListener = listener;
-   }
+   }*/
 
    public void setState(final IGameState newState)
    {
@@ -96,9 +102,9 @@ public final class GameEngine implements NetController.Listener, ShotClock.TimeI
       return shotClock;
    }
 
-   public void startNetReveiver()
+   public void startNetReceiver()
    {
-      currentState.startNetReveiver();
+      currentState.startNetReceiver();
    }
 
    public void stopNetReceiver()
@@ -128,7 +134,12 @@ public final class GameEngine implements NetController.Listener, ShotClock.TimeI
 
    public void shoot(final int i, final int j)
    {
-      currentState.shoot(i, j);
+      Message bombMsg = new Message();
+      bombMsg.TYPE = Message.GAME;
+      bombMsg.SUB_TYPE = Message.SHOOT;
+      bombMsg.PAYLOAD = new Object[]{i, j};
+      netController.sendMessage(bombMsg, connectedPeerId.split(":")[0]);
+      shotClock.reset();
    }
 
    // FIXME: This method obviously needs some refactoring ;)
@@ -148,18 +159,17 @@ public final class GameEngine implements NetController.Listener, ShotClock.TimeI
          case "Connecting":
             if (msg.TYPE == Message.CTRL && msg.SUB_TYPE == Message.CONNECT) {
 
-               Dialogs.closeMsgDialog();
+               Dialogs.closeCancelMsg();
 
                if (msg.ACK_FLAG && !msg.RST_FLAG) {
                   connectedPeerId = peerId;
                   setState(new PeerReady(this));
                }
 
-               /*
                if (msg.ACK_FLAG && msg.RST_FLAG) {
                   setState(new Disconnected(this));
                   Dialogs.showOkMsg("Connection rejected!");
-               }*/
+               }
             }
             break;
          case "PeerReady":
@@ -172,14 +182,7 @@ public final class GameEngine implements NetController.Listener, ShotClock.TimeI
 
             if (msg.TYPE == Message.CTRL) {
 
-               /*
-               if (msg.SUB_TYPE == Message.CONNECT) {
-                  msg.ACK_FLAG = true;
-                  msg.RST_FLAG = true;
-                  netController.sendMessage(msg, peerId.split(":")[0]);
-               }*/
-
-               if (/*connectedPeerId.equals(peerId) &&*/ msg.SUB_TYPE == Message.DISCONNECT) {
+               if (msg.SUB_TYPE == Message.DISCONNECT) {
                   connectedPeerId = null;
                   setState(new Disconnected(this));
                }
@@ -225,22 +228,22 @@ public final class GameEngine implements NetController.Listener, ShotClock.TimeI
                      resultFlag = ((Double) payload.get(2)).intValue();
                      Ship ship = msg.SHIP;
 
-                     enemyFleedModel.update(i, j, resultFlag, ship);
+                     enemyFleetModel.update(i, j, resultFlag, ship);
 
-                     if (enemyFleedModel.isFleedDestroyed()) {
+                     if (enemyFleetModel.isFleetDestroyed()) {
                         gotAWinner = true;
-                        scoreListener.onScoreUpdate(ownFleedModel.getShipsLeft(), 0);
+                        //scoreListener.onScoreUpdate(ownFleetModel.getShipsLeft(), 0);
                         //FIXME: should be currentState.finishGame();
                         currentState.abortGame();
-                        Dialogs.showInfoThread("You are the Winner!");
+                        Dialogs.showOkMsg("You are the Winner!");
                         return;
                      }
 
-                     myTurnFlag = resultFlag == AbstractFleedModel.HIT || resultFlag == AbstractFleedModel.DESTROYED;
+                     myTurnFlag = resultFlag == AbstractFleetModel.HIT || resultFlag == AbstractFleetModel.DESTROYED;
 
                   } else {
 
-                     Object[] result = ownFleedModel.update(i, j);
+                     Object[] result = ownFleetModel.update(i, j);
 
                      resultFlag = (Integer) result[0];
                      Ship ship = (Ship) result[1];
@@ -250,18 +253,18 @@ public final class GameEngine implements NetController.Listener, ShotClock.TimeI
                      msg.SHIP = ship;
                      netController.sendMessage(msg, connectedPeerId.split(":")[0]);
 
-                     if (ownFleedModel.isFleedDestroyed()) {
+                     if (ownFleetModel.isFleetDestroyed()) {
                         gotAWinner = true;
-                        scoreListener.onScoreUpdate(0, enemyFleedModel.getShipsLeft());
-                        Dialogs.showInfoThread("You lose!");
+                        //scoreListener.onScoreUpdate(0, enemyFleetModel.getShipsLeft());
+                        Dialogs.showOkMsg("You lose!");
                         return;
                      }
 
-                     myTurnFlag = !(resultFlag == AbstractFleedModel.HIT || resultFlag == AbstractFleedModel.DESTROYED);
+                     myTurnFlag = !(resultFlag == AbstractFleetModel.HIT || resultFlag == AbstractFleetModel.DESTROYED);
                   }
 
-                  if (resultFlag == AbstractFleedModel.DESTROYED) {
-                     scoreListener.onScoreUpdate(ownFleedModel.getShipsLeft(), enemyFleedModel.getShipsLeft());
+                  if (resultFlag == AbstractFleetModel.DESTROYED) {
+                     //scoreListener.onScoreUpdate(ownFleetModel.getShipsLeft(), enemyFleetModel.getShipsLeft());
                   }
 
                   setPlayerEnabled(myTurnFlag);
@@ -278,9 +281,9 @@ public final class GameEngine implements NetController.Listener, ShotClock.TimeI
    private void startNewGame()
    {
       gotAWinner = false;
-      ownFleedModel = new OwnFleedModel(ownFleedModelUpdateListener);
-      enemyFleedModel = new EnemyFleedModel(enemyFleedModelUpdateListener);
-      scoreListener.onScoreUpdate(AbstractFleedModel.NUMBER_OF_SHIPS, AbstractFleedModel.NUMBER_OF_SHIPS);
+      ownFleetModel = new OwnFleetModel(ownFleetModelUpdateListener);
+      enemyFleetModel = new EnemyFleetModel(enemyFleetModelUpdateListener);
+      //scoreListener.onScoreUpdate(AbstractFleetModel.NUMBER_OF_SHIPS, AbstractFleetModel.NUMBER_OF_SHIPS);
       setPlayerEnabled(myTurnFlag);
    }
 
@@ -292,14 +295,15 @@ public final class GameEngine implements NetController.Listener, ShotClock.TimeI
          shotClock.stop();
       }
       // Lets hope this really is an EnemyFleedView object
-      ((EnemyFleedView) enemyFleedModelUpdateListener).setEnabled(enable);
+      //((EnemyFleetView) enemyFleetModelUpdateListener).setEnabled(enable);
    }
 
+   /*
    @Override
    public void onError(String errMsg)
    {
       //TODO: Inform the user
-   }
+   }*/
 
    @Override
    public void onTimeIsUp()

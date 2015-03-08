@@ -16,7 +16,7 @@ public class PeerReady extends GameStateAdapter
    }
 
    @Override
-   public void startNetReveiver()
+   public void startNetReceiver()
    {
       // should never happen
    }
