@@ -5,7 +5,7 @@ import gui.Dialogs;
 import net.protocol.Message;
 
 
-public class PeerReady extends GameStateAdapter
+public class PeerReady implements GameState
 {
 
    private GameEngine engine = null;
@@ -13,12 +13,6 @@ public class PeerReady extends GameStateAdapter
    public PeerReady(final GameEngine engine)
    {
       this.engine = engine;
-   }
-
-   @Override
-   public void startNetReceiver()
-   {
-      // should never happen
    }
 
    @Override

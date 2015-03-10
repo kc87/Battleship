@@ -1,17 +1,36 @@
 package controller.state;
 
+import org.pmw.tinylog.Logger;
+
 public interface GameState
 {
-   public void startNetReceiver();
+   default void startNetReceiver()
+   {
+      Logger.error("Invalid state transition");
+   }
 
-   public void connectPeer();
+   default void connectPeer()
+   {
+      Logger.error("Invalid state transition");
+   }
 
-   public void disconnectPeer();
+   default void disconnectPeer()
+   {
+      Logger.error("Invalid state transition");
+   }
 
-   public void newGame();
+   default void newGame()
+   {
+      Logger.error("Invalid state transition");
+   }
 
-   public void abortGame();
+   default void abortGame()
+   {
+      Logger.error("Invalid state transition");
+   }
 
-   public void stopNetReceiver();
-
+   default void stopNetReceiver()
+   {
+      Logger.error("Invalid state transition");
+   }
 }

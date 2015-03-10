@@ -5,7 +5,7 @@ import gui.Dialogs;
 import net.protocol.Message;
 import org.pmw.tinylog.Logger;
 
-public class Disconnected extends GameStateAdapter
+public class Disconnected implements GameState
 {
 
    private GameEngine engine = null;

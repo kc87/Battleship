@@ -3,7 +3,7 @@ package controller.state;
 import controller.GameEngine;
 import gui.Dialogs;
 
-public class Connecting extends GameStateAdapter
+public class Connecting implements GameState
 {
 
    private GameEngine engine = null;

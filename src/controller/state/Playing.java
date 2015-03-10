@@ -4,19 +4,13 @@ import controller.GameEngine;
 import gui.Dialogs;
 import net.protocol.Message;
 
-public class Playing extends GameStateAdapter
+public class Playing implements GameState
 {
    private GameEngine engine = null;
 
    public Playing(final GameEngine engine)
    {
       this.engine = engine;
-   }
-
-   @Override
-   public void startNetReceiver()
-   {
-      // should never happen
    }
 
    @Override
@@ -32,6 +26,7 @@ public class Playing extends GameStateAdapter
       disconnectMsg.SUB_TYPE = Message.DISCONNECT;
       engine.getNetController().sendMessage(disconnectMsg, engine.getConnectedPeerIp());
       engine.setConnectedPeerId(null);
+      engine.getShotClock().stop();
       engine.setState(new Disconnected(engine));
    }
 

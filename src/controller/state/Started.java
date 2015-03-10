@@ -3,7 +3,7 @@ package controller.state;
 import controller.GameEngine;
 import org.pmw.tinylog.Logger;
 
-public class Started extends GameStateAdapter
+public class Started implements GameState
 {
    private GameEngine engine = null;
 
@@ -17,30 +17,6 @@ public class Started extends GameStateAdapter
    {
       engine.getNetController().startReceiverThread();
       engine.setState(new Disconnected(engine));
-   }
-
-   @Override
-   public void connectPeer()
-   {
-      Logger.error("Wrong state transition");
-   }
-
-   @Override
-   public void disconnectPeer()
-   {
-      Logger.error("Wrong state transition");
-   }
-
-   @Override
-   public void newGame()
-   {
-      Logger.error("Wrong state transition");
-   }
-
-   @Override
-   public void abortGame()
-   {
-      Logger.error("Wrong state transition");
    }
 
    @Override
