@@ -1,10 +1,10 @@
 package gui.controller;
 
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
@@ -33,8 +33,19 @@ public abstract class AbstractFleetView extends BorderPane implements Initializa
          e.printStackTrace();
       }
    }
+   
+   public abstract void updatePartialViewOnUi(final AbstractFleetModel fleetModel, final int i, final int j);
 
-   public abstract void updatePartialView(final AbstractFleetModel fleetModel, final int i, final int j);
+   public void updatePartialView(final AbstractFleetModel fleetModel, final int i, final int j)
+   {
+      // Make sure its running on the Ui-Thread
+      if(Platform.isFxApplicationThread()){
+         updatePartialViewOnUi(fleetModel,i,j);
+      }else {
+         Platform.runLater(() -> updatePartialViewOnUi(fleetModel,i,j));
+      }
+   }
+
 
    @Override
    public void onPartialUpdate(final AbstractFleetModel model, final int i, final int j, final int flag)
@@ -64,18 +75,11 @@ public abstract class AbstractFleetView extends BorderPane implements Initializa
       for (int row = 0; row < GRID_SIZE; row++) {
          for (int col = 0; col < GRID_SIZE; col++) {
             Region seaTile = new Region();
+            seaTile.setCache(false);
             seaTile.getStyleClass().add("SeaTile");
             seaTile.setId(String.valueOf(GRID_SIZE * row + col));
             seaGrid.add(seaTile, row, col);
          }
       }
    }
-
-   public void resetSeaGrid()
-   {
-      for(final Node node: seaGrid.getChildren()){
-         ((Region)node).getStyleClass().setAll("SeaTile");
-      }
-   }
-
 }

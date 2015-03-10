@@ -13,10 +13,12 @@ public class EnemyFleetView extends AbstractFleetView
 {
    public EnemyFleetView()
    {
+      getStyleClass().add("EnemyFleetView");
    }
 
+
    @Override
-   public void updatePartialView(final AbstractFleetModel fleetModel, final int i, final int j)
+   public void updatePartialViewOnUi(final AbstractFleetModel fleetModel, final int i, final int j)
    {
       int gridValue = fleetModel.getSeaGrid()[i + 1][j + 1];
       int nodeId = GRID_SIZE * j + i;
@@ -24,17 +26,17 @@ public class EnemyFleetView extends AbstractFleetView
 
       // Just water
       if (gridValue == 0 || gridValue == AbstractFleetModel.MISS) {
-         node.getStyleClass().add(1, gridValue == 0 ? "Water" : "Miss");
+         node.getStyleClass().setAll("SeaTile", gridValue == 0 ? "Water" : "Miss");
          return;
       }
 
       if (gridValue == AbstractFleetModel.HIT) {
-         node.getStyleClass().add(1, "Hit");
+         node.getStyleClass().setAll("SeaTile", "Hit");
          return;
       }
 
       if (gridValue > 0 && gridValue < AbstractFleetModel.NUMBER_OF_SHIPS + 1) {
-         node.getStyleClass().add(1, "Destroyed");
+         node.getStyleClass().setAll("SeaTile", "Destroyed");
       }
    }
 

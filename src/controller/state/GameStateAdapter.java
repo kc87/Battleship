@@ -1,6 +1,6 @@
 package controller.state;
 
-public abstract class GameStateAdapter implements IGameState
+public abstract class GameStateAdapter implements GameState
 {
    @Override
    public void startNetReceiver()

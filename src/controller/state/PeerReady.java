@@ -32,7 +32,8 @@ public class PeerReady extends GameStateAdapter
    {
       Message disconnectMsg = new Message();
       disconnectMsg.SUB_TYPE = Message.DISCONNECT;
-      engine.getNetController().sendMessage(disconnectMsg, engine.getConnectedPeerId().split(":")[0]);
+      engine.getNetController().sendMessage(disconnectMsg, engine.getConnectedPeerIp());
+      engine.setConnectedPeerId(null);
       engine.setState(new Disconnected(engine));
    }
 
@@ -42,7 +43,7 @@ public class PeerReady extends GameStateAdapter
       Message newGameMsg = new Message();
       newGameMsg.TYPE = Message.GAME;
       newGameMsg.SUB_TYPE = Message.NEW;
-      engine.getNetController().sendMessage(newGameMsg, engine.getConnectedPeerId().split(":")[0]);
+      engine.getNetController().sendMessage(newGameMsg, engine.getConnectedPeerIp());
    }
 
    @Override

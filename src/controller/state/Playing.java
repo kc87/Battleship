@@ -22,7 +22,7 @@ public class Playing extends GameStateAdapter
    @Override
    public void connectPeer()
    {
-      Dialogs.showOkMsg("Already connected to Player: " + engine.getConnectedPeerId());
+      Dialogs.showOkMsg("Already connected to Player: " + engine.getConnectedPeerIp());
    }
 
    @Override
@@ -30,7 +30,8 @@ public class Playing extends GameStateAdapter
    {
       Message disconnectMsg = new Message();
       disconnectMsg.SUB_TYPE = Message.DISCONNECT;
-      engine.getNetController().sendMessage(disconnectMsg, engine.getConnectedPeerId().split(":")[0]);
+      engine.getNetController().sendMessage(disconnectMsg, engine.getConnectedPeerIp());
+      engine.setConnectedPeerId(null);
       engine.setState(new Disconnected(engine));
    }
 
@@ -46,7 +47,7 @@ public class Playing extends GameStateAdapter
       Message abortGameMsg = new Message();
       abortGameMsg.TYPE = Message.GAME;
       abortGameMsg.SUB_TYPE = Message.ABORT;
-      engine.getNetController().sendMessage(abortGameMsg, engine.getConnectedPeerId().split(":")[0]);
+      engine.getNetController().sendMessage(abortGameMsg, engine.getConnectedPeerIp());
       engine.setPlayerEnabled(true);
       engine.getShotClock().stop();
       engine.setState(new PeerReady(engine));

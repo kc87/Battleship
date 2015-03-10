@@ -64,6 +64,7 @@ public class Dialogs
       dialog.setTitle("Peer IP");
       dialog.setHeaderText("Enter the IP of the Peer you want to play with");
       dialog.setContentText("Peer IP:");
+      dialog.getEditor().requestFocus();
 
       Optional<String> ip = dialog.showAndWait();
 
@@ -88,6 +89,7 @@ public class Dialogs
       dialog.setTitle("Start as local only client?");
       dialog.setHeaderText("Choose a local unique client number");
       dialog.setContentText("[1..254]:");
+      dialog.getEditor().requestFocus();
 
       Optional<String> lastOctet = dialog.showAndWait();
 

@@ -1,13 +1,90 @@
-#StatusBar {
-
-    -fx-background-color: bisque;
-    -fx-border-width: 2px;
+.root {
+    -fx-background-color: linear-gradient(#666666 0%, #888888 100%);
 }
 
+.ScoreBoard {
+    -fx-alignment: center;
+    -fx-spacing: 5px;
+    -fx-padding: 5px;
+}
 
-#StatusBar > .Label {
+.ScoreBox {
+    -fx-alignment: center;
+    -fx-background-radius: 8,7,6;
+    -fx-background-insets: 0,1,2;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+}
 
-    -fx-background-color: #f00;
-    -fx-padding: 4px;
+.ScoreBox > .label {
+
+    -fx-font-size: 2em;
+    -fx-font-weight: bold;
+    -fx-text-fill: #111111;
+    -fx-padding: 2px;
+}
+
+.EnemyScoreBox {
+
+    -fx-background-color:
+        linear-gradient(#ff0000, #dd0000),
+        linear-gradient(#ec0000 0%, #d90000 20%, #d60000 100%),
+        linear-gradient(#aa0000 0%, #ff3333 50%);
+}
+
+.OwnScoreBox {
+
+    -fx-background-color:
+        linear-gradient(#00ff00, #00ff00),
+        linear-gradient(#00ec00 0%, #00d900 20%, #00d600 100%),
+        linear-gradient(#00aa00 0%, #00f600 50%);
+
+}
+
+.ShotClock {
+    -fx-alignment: center;
+    -fx-background-color:
+        linear-gradient(#686868 0%, #232723 25%, #373837 75%, #757575 100%),
+        linear-gradient(#020b02, #3a3a3a),
+        linear-gradient(#b9b9b9 0%, #c2c2c2 20%, #afafaf 80%, #c8c8c8 100%),
+        linear-gradient(#f5f5f5 0%, #dbdbdb 50%, #cacaca 51%, #d7d7d7 100%);
+    -fx-background-insets: 0,1,4,5;
+    -fx-background-radius: 9,8,5,4;
+    -fx-padding: 5px;
+}
+
+.ShotClock > .label {
+
+    -fx-font-weight: bold;
+    -fx-text-alignment: center;
+}
+
+#shotClockLabel {
+    -fx-font-size: 3em;
+}
+
+#fleetViewContainer {
+    -fx-padding: 12px;
+    -fx-spacing: 12px;
+}
+
+.StatusBar {
+
+    -fx-border-width: 1px;
+    -fx-border-color: #888;
+    -fx-padding: 0.0em 0.666667em 0.0em 0.666667em;
+    -fx-spacing: 0.166667em;
+    -fx-background-color: linear-gradient(to bottom, #eeeeee 0%, #aaaaaa 90%);
+    -fx-background-insets: 0 0 0 0, 1 0 1 0;
+    -fx-background-radius: 0, 0 ;
+}
+
+.StatusBar > .label {
+
+    -fx-padding: 0px;
     -fx-start-margin: 5;
+}
+
+#stateLabel, #peerIpLabel {
+
+    -fx-font-weight: bold;
 }

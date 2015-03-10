@@ -5,6 +5,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.HBox;
@@ -15,6 +16,8 @@ import java.io.IOException;
 public class MainView extends VBox
 {
    private static final String FXML_FILE = "/gui/fxml/main.fxml";
+   private GameEngine gameEngine;
+   EnemyFleetView enemyFleetView;
 
    @FXML
    private Menu fileMenu;
@@ -24,6 +27,17 @@ public class MainView extends VBox
    private Menu gameMenu;
    @FXML
    private HBox fleetViewContainer;
+   @FXML
+   private Label stateLabel;
+   @FXML
+   private Label peerIpLabel;
+   @FXML
+   private Label shotClockLabel;
+   @FXML
+   private Label enemyScoreLabel;
+   @FXML
+   private Label ownScoreLabel;
+
 
    public MainView()
    {
@@ -37,23 +51,54 @@ public class MainView extends VBox
       }
    }
 
+   public void updateState()
+   {
+      Platform.runLater(() -> {
+         stateLabel.setText(gameEngine.getStateName());
+         if(gameEngine.getConnectedPeerIp() != null){
+            peerIpLabel.setText(gameEngine.getConnectedPeerIp());
+         }else {
+            peerIpLabel.setText("N/A");
+         }
+      });
+   }
+
+   public void updateShotClock(final int tick)
+   {
+      Platform.runLater(() -> shotClockLabel.setText(String.valueOf(tick)));
+   }
+
+   public void updateScore(final int ownShips,final int enemyShips)
+   {
+      Platform.runLater(() -> {
+         ownScoreLabel.setText(String.valueOf(ownShips));
+         enemyScoreLabel.setText(String.valueOf(enemyShips));
+      });
+   }
+
+   public void enableEnemyView(final boolean enabled)
+   {
+      enemyFleetView.setDisable(!enabled);
+   }
 
    @FXML
-   public void initialize()
+   private void initialize()
    {
+      gameEngine = GameEngine.getInstance();
       fileMenu.setOnAction(this::menuActionHandler);
       playerMenu.setOnAction(this::menuActionHandler);
       gameMenu.setOnAction(this::menuActionHandler);
+      enemyFleetView = new EnemyFleetView();
 
-      EnemyFleetView enemyFleetView = new EnemyFleetView();
       OwnFleetView ownFleetView = new OwnFleetView();
 
-      //ownFleetView.setDisable(true);
-      GameEngine.getInstance().setModelUpdateListener(ownFleetView, enemyFleetView);
+      gameEngine.setModelUpdateListener(ownFleetView, enemyFleetView);
+      gameEngine.setMainView(this);
 
       fleetViewContainer.getChildren().addAll(enemyFleetView, ownFleetView);
-   }
 
+      updateState();
+   }
 
    private void menuActionHandler(final ActionEvent e)
    {
