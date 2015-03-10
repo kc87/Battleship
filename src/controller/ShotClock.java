@@ -24,6 +24,76 @@ public class ShotClock
       }
    }
 
+
+   public void start()
+   {
+      timeout.set(TIMEOUT);
+      isStopped.set(false);
+
+      synchronized (waitLock) {
+         waitLock.notify();
+      }
+
+      if (shotClockThread == null) {
+         startThread();
+      }
+   }
+
+   public void stop()
+   {
+      isStopped.set(true);
+
+      if (listener != null) {
+         listener.onTick(0);
+      }
+   }
+
+   public void pause()
+   {
+      isStopped.set(true);
+   }
+
+   public void resume()
+   {
+      isStopped.set(false);
+   }
+
+
+   private void startThread()
+   {
+      shotClockThread = new Thread(new Runnable()
+      {
+         @Override
+         public void run()
+         {
+            timeout.set(TIMEOUT);
+
+            while (!Thread.currentThread().isInterrupted()) {
+               try {
+                  synchronized (waitLock) {
+                     waitLock.wait(1000);
+                  }
+                  if (!isStopped.get()) {
+                     if (listener != null) {
+                        listener.onTick(timeout.intValue());
+                     }
+                     if (timeout.getAndDecrement() <= 0) {
+                        if (listener != null) {
+                           listener.onTimeIsUp();
+                        }
+                     }
+                  }
+               } catch (InterruptedException e) {
+                  Thread.currentThread().interrupt();
+               }
+            }
+         }
+      }, "ShotClockThread");
+
+      shotClockThread.start();
+   }
+
+   /*
    public void stop()
    {
       if(listener != null) {
@@ -84,7 +154,7 @@ public class ShotClock
       }, "ShotClockThread");
 
       shotClockThread.start();
-   }
+   }*/
 
 
    public interface Listener

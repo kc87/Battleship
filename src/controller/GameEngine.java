@@ -75,7 +75,6 @@ public final class GameEngine implements NetController.Listener, ShotClock.Liste
       return (connectedPeerId != null) ? connectedPeerId.split(":")[0] : null;
    }
 
-
    public void setConnectedPeerId(final String newPeerId)
    {
       connectedPeerId = newPeerId;
@@ -134,7 +133,7 @@ public final class GameEngine implements NetController.Listener, ShotClock.Liste
          bombMsg.SUB_TYPE = Message.SHOOT;
          bombMsg.PAYLOAD = new Object[]{i, j};
          netController.sendMessage(bombMsg, getConnectedPeerIp());
-         shotClock.reset();
+         shotClock.start();
       }
    }
 
@@ -284,7 +283,7 @@ public final class GameEngine implements NetController.Listener, ShotClock.Liste
    public void setPlayerEnabled(final boolean enable)
    {
       if (enable) {
-         shotClock.reset();
+         shotClock.start();
       } else {
          shotClock.stop();
       }
