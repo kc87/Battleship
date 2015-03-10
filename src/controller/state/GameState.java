@@ -1,6 +1,6 @@
 package controller.state;
 
-public interface IGameState
+public interface GameState
 {
    public void startNetReceiver();
 
