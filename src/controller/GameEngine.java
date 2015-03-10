@@ -85,11 +85,6 @@ public final class GameEngine implements NetController.Listener, ShotClock.Liste
       return currentState.getClass().getSimpleName();
    }
 
-   public GameState getState()
-   {
-      return currentState;
-   }
-
    public ShotClock getShotClock()
    {
       return shotClock;
@@ -178,6 +173,7 @@ public final class GameEngine implements NetController.Listener, ShotClock.Liste
             if (msg.TYPE == Message.CTRL) {
                if (msg.SUB_TYPE == Message.DISCONNECT) {
                   connectedPeerId = null;
+                  shotClock.stop();
                   setState(new Disconnected(this));
                }
             }
@@ -266,7 +262,7 @@ public final class GameEngine implements NetController.Listener, ShotClock.Liste
 
             break;
          default:
-            //TODO: Maybe send some sort of reject message
+            //TODO: Maybe send some sort of reject message ??
             break;
       }
    }
