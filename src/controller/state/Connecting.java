@@ -13,11 +13,6 @@ public class Connecting implements GameState
       this.engine = engine;
    }
 
-   @Override
-   public void startNetReceiver()
-   {
-
-   }
 
    @Override
    public void connectPeer()

@@ -1,7 +1,6 @@
 package controller.state;
 
 import controller.GameEngine;
-import org.pmw.tinylog.Logger;
 
 public class Started implements GameState
 {
