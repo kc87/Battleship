@@ -40,9 +40,8 @@
 }
 
 .Sea {
-    /*-fx-background-color: #111111;*/
     /*noinspection CssInvalidFunction*/
-    -fx-background-color: radial-gradient(center 50% 50%,radius 100%, #0000ff, #000055);
+    -fx-background-color: radial-gradient(center 50% 50%,radius 100%, #1111ff, #000044);
     -fx-background-radius: 4;
 }
 
@@ -67,7 +66,6 @@
 .Water {
     -fx-background-insets: 0;
     -fx-background-radius: 0;
-    /*-fx-background-color: #000099;*/
 }
 
 .Hit {

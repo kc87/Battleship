@@ -2,7 +2,6 @@
 
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
-<?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
 <fx:root minHeight="200.0" minWidth="200.0" styleClass="Board" stylesheets="@seagrid.css" type="javafx.scene.layout.BorderPane" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1">
@@ -32,10 +31,6 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             </rowConstraints>
-
-         <children>
-         </children>
-
          <opaqueInsets>
             <Insets />
          </opaqueInsets>
@@ -63,7 +58,6 @@
             <rowConstraints>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
             </rowConstraints>
-         <children>
             <Label text="1" GridPane.columnIndex="1" />
             <Label text="2" GridPane.columnIndex="2" />
             <Label text="3" GridPane.columnIndex="3" />
@@ -74,7 +68,6 @@
             <Label text="8" GridPane.columnIndex="8" />
             <Label text="9" GridPane.columnIndex="9" />
             <Label text="10" GridPane.columnIndex="10" />
-         </children>
         </GridPane>
     </bottom>
     <left>
@@ -94,7 +87,6 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             </rowConstraints>
-         <children>
             <Label text="A" />
             <Label text="B" GridPane.rowIndex="1" />
             <Label text="C" GridPane.rowIndex="2" />
@@ -105,7 +97,6 @@
             <Label text="H" GridPane.rowIndex="7" />
             <Label text="I" GridPane.rowIndex="8" />
             <Label text="J" GridPane.rowIndex="9" />
-         </children>
         </GridPane>
     </left>
     <top>
@@ -127,7 +118,6 @@
             <rowConstraints>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
             </rowConstraints>
-         <children>
             <Label alignment="CENTER" contentDisplay="CENTER" text="1" textAlignment="CENTER" GridPane.columnIndex="1" />
             <Label text="2" GridPane.columnIndex="2" />
             <Label text="3" GridPane.columnIndex="3" />
@@ -138,7 +128,6 @@
             <Label text="8" GridPane.columnIndex="8" />
             <Label text="9" GridPane.columnIndex="9" />
             <Label text="10" GridPane.columnIndex="10" />
-         </children>
         </GridPane>
     </top>
     <right>
@@ -158,7 +147,6 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             </rowConstraints>
-         <children>
             <Label text="A" />
             <Label text="B" GridPane.rowIndex="1" />
             <Label text="C" GridPane.rowIndex="2" />
@@ -169,7 +157,6 @@
             <Label text="H" GridPane.rowIndex="7" />
             <Label text="I" GridPane.rowIndex="8" />
             <Label text="J" GridPane.rowIndex="9" />
-         </children>
         </GridPane>
     </right>
 </fx:root>

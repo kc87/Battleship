@@ -82,7 +82,7 @@
 
 .StatusBar > .label {
 
-    -fx-padding: 0px;
+    -fx-padding: 0;
     -fx-start-margin: 5;
 }
 
