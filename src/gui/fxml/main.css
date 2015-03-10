@@ -41,6 +41,7 @@
 }
 
 .ShotClock {
+    -fx-padding: 0;
     -fx-alignment: center;
     -fx-background-color:
         linear-gradient(#686868 0%, #232723 25%, #373837 75%, #757575 100%),
@@ -49,17 +50,18 @@
         linear-gradient(#f5f5f5 0%, #dbdbdb 50%, #cacaca 51%, #d7d7d7 100%);
     -fx-background-insets: 0,1,4,5;
     -fx-background-radius: 9,8,5,4;
-    -fx-padding: 5px;
+    -fx-spacing: -5;
 }
 
 .ShotClock > .label {
-
+    -fx-padding: 5px 0 0 0;
     -fx-font-weight: bold;
     -fx-text-alignment: center;
 }
 
 #shotClockLabel {
     -fx-font-size: 3em;
+    -fx-padding: 0;
 }
 
 #fleetViewContainer {

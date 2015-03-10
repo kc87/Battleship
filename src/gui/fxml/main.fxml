@@ -46,7 +46,7 @@
                 <VBox minWidth="100.0" styleClass="ShotClock" HBox.hgrow="NEVER">
                     <children>
                         <Label text="Shot Clock" />
-                        <Label fx:id="shotClockLabel" prefHeight="40.0" prefWidth="28.0" text="0" />
+                        <Label fx:id="shotClockLabel" alignment="CENTER" prefHeight="47.0" prefWidth="80.0" text="0" />
                     </children>
                     <HBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
