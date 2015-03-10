@@ -33,7 +33,7 @@ public abstract class AbstractFleetView extends BorderPane implements Initializa
          e.printStackTrace();
       }
    }
-   
+
    public abstract void updatePartialViewOnUi(final AbstractFleetModel fleetModel, final int i, final int j);
 
    public void updatePartialView(final AbstractFleetModel fleetModel, final int i, final int j)
