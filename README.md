@@ -10,6 +10,8 @@ Java II Project: Simple P2P Battleship Game
 * Development time: ca. 40 hours
 * JavaFX version on [fx8 branch](../../tree/fx8)
 
-## Screenshot
-
+## Screenshots
+### Swing Version
 ![alt tag](docs/battleship.png)
+### JavaFX 8 Version
+![alt tag](../fx8/docs/battleship_fx8.png)
