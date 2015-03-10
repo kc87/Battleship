@@ -8,7 +8,7 @@ Java II Project: Simple P2P Battleship Game
 * Message <-> Object DeSerialization using Gson
 * GUI Framework: Swing
 * Development time: ca. 40 hours
-* JavaFX version on [fx8 branch](/kc87/Battleship/tree/fx8)
+* JavaFX version on [fx8 branch](../../tree/fx8)
 
 ## Screenshot
 
