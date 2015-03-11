@@ -14,26 +14,24 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
-import java.net.UnknownHostException;
 
 public class NetController
 {
    private static final int PORT = 60000;
-   private DatagramSocket rcvSocket = null;
-   private DatagramSocket sendSocket = null;
+   private DatagramSocket udpSocket = null;
    private Thread receiverThread = null;
    private Listener listener = null;
-
 
    public NetController(final Listener listener)
    {
       this.listener = listener;
-      setupSockets();
    }
 
    public void startReceiverThread()
    {
       if (receiverThread == null || !receiverThread.isAlive()) {
+
+         setupSockets();
 
          receiverThread = new Thread(() -> {
             Logger.info("Receiver thread started...");
@@ -44,7 +42,7 @@ public class NetController
                DatagramPacket packet = new DatagramPacket(packetData, packetData.length);
                try {
                   // blocking call
-                  rcvSocket.receive(packet);
+                  udpSocket.receive(packet);
                   id = packet.getAddress().getHostAddress() + ":" + packet.getPort();
                   msg = new String(packet.getData(), "UTF-8");
                   parsePacket(msg, id);
@@ -55,8 +53,8 @@ public class NetController
                }
             }
 
-            rcvSocket.close();
-            rcvSocket = null;
+            udpSocket.close();
+            udpSocket = null;
 
             Logger.debug("Out of while loop");
          }, "ReceiverThread");
@@ -84,7 +82,9 @@ public class NetController
             byte[] pktData = gson.toJson(message).getBytes("UTF-8");
             DatagramPacket packet = new DatagramPacket(pktData, pktData.length,
                     InetAddress.getByName(peerAddress), PORT);
-            sendSocket.send(packet);
+            if(udpSocket != null) {
+               udpSocket.send(packet);
+            }
          } catch (IOException e) {
             Logger.error(e);
          }
@@ -109,33 +109,22 @@ public class NetController
 
    private void setupSockets()
    {
-      InetSocketAddress sendSockAddress;
-      InetSocketAddress recvSockAddress;
-
-      // Bind receiver socket first to prevent port collision
       try {
-
-         rcvSocket = new DatagramSocket(null);
+         udpSocket = new DatagramSocket(null);
 
          if (Main.localBindAddress == null) {
-            Main.localBindAddress = InetAddress.getLocalHost().getHostAddress();
-            recvSockAddress = new InetSocketAddress(PORT);
-            rcvSocket.bind(recvSockAddress);
-            sendSocket = new DatagramSocket(0);
+            // Bind to all active interfaces
+            udpSocket.bind(new InetSocketAddress(PORT));
          } else {
-            recvSockAddress = new InetSocketAddress(Main.localBindAddress, PORT);
-            rcvSocket.bind(recvSockAddress);
-
-            sendSockAddress = new InetSocketAddress(Main.localBindAddress, 0);
-            sendSocket = new DatagramSocket(null);
-            sendSocket.bind(sendSockAddress);
+            // Bind to loopback interface only
+            udpSocket.bind(new InetSocketAddress(Main.localBindAddress, PORT));
          }
 
          Logger.debug("Bind address is: " + Main.localBindAddress);
 
-         rcvSocket.setSoTimeout(500);
+         udpSocket.setSoTimeout(500);
 
-      } catch (SocketException | UnknownHostException e) {
+      } catch (final SocketException e) {
          Logger.error(e);
       }
    }
