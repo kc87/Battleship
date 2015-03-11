@@ -11,7 +11,7 @@ import org.pmw.tinylog.Logger;
 public class Main extends Application
 {
    public static final String TITLE = "P2P Battleship (FX8)";
-   public static final String VERSION = "v0.1";
+   public static final String VERSION = "v0.11";
    public static String localBindAddress = null;
 
    @Override
