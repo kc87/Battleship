@@ -1,5 +1,5 @@
 # Battleship (FX8)
-Simple P2P Battleship Game using **JavaFX 8**
+Simple P2P [Battleship Game](http://en.wikipedia.org/wiki/Battleship_%28game%29) using **JavaFX 8**
 
 
 ## Some Notes
