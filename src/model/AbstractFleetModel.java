@@ -48,7 +48,6 @@ public abstract class AbstractFleetModel
    public interface ModelUpdateListener
    {
       public void onTotalUpdate(final AbstractFleetModel model);
-
       public void onPartialUpdate(final AbstractFleetModel model, final int i, final int j, final int flag);
    }
 
