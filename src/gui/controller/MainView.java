@@ -18,7 +18,14 @@ import java.io.IOException;
 public class MainView extends VBox
 {
    private static final String FXML_FILE = "/gui/fxml/main.fxml";
+   private static final String APP_QUIT = "quitAppItem";
+   private static final String PLAYER_CONNECT = "connectPlayerItem";
+   private static final String PLAYER_DISCONNECT = "disconnectPlayerItem";
+   private static final String GAME_NEW = "newGameItem";
+   private static final String GAME_ABORT = "abortGameItem";
    private static final int FADE_DURATION = 300;
+   private static final int FADE_DURATION_DELAY = 200;
+
    private final GameEngine gameEngine = GameEngine.getInstance();
    private EnemyFleetView enemyFleetView;
    private FadeTransition fadeTransition;
@@ -98,8 +105,8 @@ public class MainView extends VBox
       gameMenu.setOnAction(this::menuActionHandler);
       enemyFleetView = new EnemyFleetView();
 
-      fadeTransition = new FadeTransition(Duration.millis(FADE_DURATION),enemyFleetView);
-      fadeTransition.setDelay(Duration.millis(200));
+      fadeTransition = new FadeTransition(Duration.millis(FADE_DURATION),enemyFleetView.seaGrid);
+      fadeTransition.setDelay(Duration.millis(FADE_DURATION_DELAY));
 
       OwnFleetView ownFleetView = new OwnFleetView();
 
@@ -116,19 +123,19 @@ public class MainView extends VBox
       final MenuItem menuItem = (MenuItem)e.getTarget();
 
       switch(menuItem.getId()){
-         case "quitAppItem":
+         case APP_QUIT:
             Platform.exit();
             break;
-         case "connectPlayerItem":
+         case PLAYER_CONNECT:
             GameEngine.getInstance().connectPeer();
             break;
-         case "disconnectPlayerItem":
+         case PLAYER_DISCONNECT:
             GameEngine.getInstance().disconnectPeer();
             break;
-         case "newGameItem":
+         case GAME_NEW:
             GameEngine.getInstance().newGame();
             break;
-         case "abortGameItem":
+         case GAME_ABORT:
             GameEngine.getInstance().abortGame();
             break;
          default:

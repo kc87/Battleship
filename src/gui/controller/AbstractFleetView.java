@@ -94,7 +94,7 @@ public abstract class AbstractFleetView extends BorderPane implements Initializa
 
       if(currentNodeStyleClass.equals("Hit") || currentNodeStyleClass.equals("Ship")){
          scaleTransition.setToY(0.0);
-         scaleTransition.setOnFinished((e) -> {
+         scaleTransition.setOnFinished(e -> {
             final ScaleTransition scaleTransition2 = new ScaleTransition(Duration.millis(FADE_DURATION), tileNode);
             tileNode.getStyleClass().setAll("SeaTile", tileStyle);
             scaleTransition2.setToY(1.0);
