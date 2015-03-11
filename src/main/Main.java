@@ -24,10 +24,10 @@ public class Main extends Application
    public void start(Stage mainStage) throws Exception
    {
       localBindAddress = Dialogs.requestLocalBindIp();
-      GameEngine.getInstance().startNetReceiver();
-
       String title = TITLE + " " + VERSION +
                     (localBindAddress != null ? " ["+localBindAddress+"]" : "");
+
+      GameEngine.getInstance().startNetReceiver();
 
       mainStage.setTitle(title);
       mainStage.setScene(new Scene(new MainView()));;
