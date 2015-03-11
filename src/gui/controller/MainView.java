@@ -1,6 +1,7 @@
 package gui.controller;
 
 import controller.GameEngine;
+import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -10,14 +11,17 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 
 import java.io.IOException;
 
 public class MainView extends VBox
 {
    private static final String FXML_FILE = "/gui/fxml/main.fxml";
-   private GameEngine gameEngine;
-   EnemyFleetView enemyFleetView;
+   private static final int FADE_DURATION = 500;
+   private final GameEngine gameEngine = GameEngine.getInstance();
+   private EnemyFleetView enemyFleetView;
+   private FadeTransition fadeTransition;
 
    @FXML
    private Menu fileMenu;
@@ -78,17 +82,24 @@ public class MainView extends VBox
 
    public void enableEnemyView(final boolean enabled)
    {
-      enemyFleetView.setDisable(!enabled);
+      if(enemyFleetView.isDisabled() == enabled) {
+         enemyFleetView.setDisable(!enabled);
+         fadeTransition.setFromValue(enabled ? 0.2 : 1.0);
+         fadeTransition.setToValue(enabled ? 1.0 : 0.2);
+         fadeTransition.play();
+      }
    }
 
    @FXML
    private void initialize()
    {
-      gameEngine = GameEngine.getInstance();
       fileMenu.setOnAction(this::menuActionHandler);
       playerMenu.setOnAction(this::menuActionHandler);
       gameMenu.setOnAction(this::menuActionHandler);
       enemyFleetView = new EnemyFleetView();
+
+      fadeTransition = new FadeTransition(Duration.millis(FADE_DURATION),enemyFleetView);
+      fadeTransition.setDelay(Duration.millis(300));
 
       OwnFleetView ownFleetView = new OwnFleetView();
 
@@ -119,8 +130,6 @@ public class MainView extends VBox
             break;
          case "abortGameItem":
             GameEngine.getInstance().abortGame();
-            break;
-         case "quitGameItem":
             break;
          default:
             throw new UnsupportedOperationException("Not yet implemented!");

@@ -18,7 +18,6 @@
         <Menu fx:id="gameMenu" mnemonicParsing="false" text="Game">
             <MenuItem fx:id="newGameItem" mnemonicParsing="false" text="New Game"/>
             <MenuItem fx:id="abortGameItem" mnemonicParsing="false" text="Abort Game"/>
-            <MenuItem fx:id="quitGameItem" mnemonicParsing="false" text="Quit Game"/>
         </Menu>
     </MenuBar>
     <HBox maxHeight="80.0" minHeight="80.0" prefHeight="80.0" prefWidth="800.0" styleClass="ScoreBoard"

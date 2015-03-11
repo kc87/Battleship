@@ -1,8 +1,10 @@
 package gui.controller;
 
 import controller.GameEngine;
+import javafx.animation.ScaleTransition;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
+import javafx.util.Duration;
 import model.AbstractFleetModel;
 
 import java.net.URL;
@@ -11,6 +13,10 @@ import java.util.ResourceBundle;
 
 public class EnemyFleetView extends AbstractFleetView
 {
+   private static final int FADE_DURATION = 300;
+   private ScaleTransition scaleTransition;
+   private Node lastClickedNode;
+
    public EnemyFleetView()
    {
       getStyleClass().add("EnemyFleetView");
@@ -24,19 +30,24 @@ public class EnemyFleetView extends AbstractFleetView
       int nodeId = GRID_SIZE * j + i;
       Node node = seaGrid.lookup("#" + nodeId);
 
+      if (gridValue == 0) {
+         node.getStyleClass().setAll("SeaTile", "Water");
+         return;
+      }
+
       // Just water
-      if (gridValue == 0 || gridValue == AbstractFleetModel.MISS) {
-         node.getStyleClass().setAll("SeaTile", gridValue == 0 ? "Water" : "Miss");
+      if (gridValue == AbstractFleetModel.MISS) {
+         setTileStyle(node, "Miss");
          return;
       }
 
       if (gridValue == AbstractFleetModel.HIT) {
-         node.getStyleClass().setAll("SeaTile", "Hit");
+         setTileStyle(node, "Hit");
          return;
       }
 
       if (gridValue > 0 && gridValue < AbstractFleetModel.NUMBER_OF_SHIPS + 1) {
-         node.getStyleClass().setAll("SeaTile", "Destroyed");
+         setTileStyle(node, "Destroyed");
       }
    }
 
@@ -49,16 +60,29 @@ public class EnemyFleetView extends AbstractFleetView
    }
 
 
-   private void seaTileHandler(MouseEvent event)
+   private void setTileStyle(final Node tileNode, final String tileStyle)
+   {
+      tileNode.setScaleX(0.0);
+      tileNode.setScaleY(0.0);
+      tileNode.getStyleClass().setAll("SeaTile", tileStyle);
+      scaleTransition = new ScaleTransition(Duration.millis(FADE_DURATION), tileNode);
+      scaleTransition.setToX(1.0);
+      scaleTransition.setToY(1.0);
+      scaleTransition.play();
+   }
+
+   private void seaTileHandler(final MouseEvent event)
    {
       int nodeId;
-      Node targetNode = (Node) event.getTarget();
+      final Node targetNode = (Node) event.getTarget();
 
       try {
          nodeId = Integer.parseInt(targetNode.getId());
-      } catch (NumberFormatException ex) {
+      } catch (final NumberFormatException e) {
          return;
       }
+
+      lastClickedNode = targetNode;
 
       int i = nodeId % GRID_SIZE;
       int j = nodeId / GRID_SIZE;

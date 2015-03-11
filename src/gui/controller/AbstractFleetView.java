@@ -51,7 +51,8 @@ public abstract class AbstractFleetView extends BorderPane implements Initializa
    public void onPartialUpdate(final AbstractFleetModel model, final int i, final int j, final int flag)
    {
       if (flag != AbstractFleetModel.AGAIN) {
-         if (flag == AbstractFleetModel.MISS || flag == AbstractFleetModel.HIT) {
+         if (flag == AbstractFleetModel.MISS ||
+                 flag == AbstractFleetModel.HIT || flag == AbstractFleetModel.DESTROYED) {
             updatePartialView(model, i, j);
          } else {
             onTotalUpdate(model);
