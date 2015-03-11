@@ -30,10 +30,11 @@ public class Disconnected implements GameState
          connectMsg.SUB_TYPE = Message.CONNECT;
          engine.getNetController().sendMessage(connectMsg, peerIp);
          engine.setState(new Connecting(engine));
-         if (Dialogs.showCancelMsg("Connecting...")) {
+         /*
+         if (!Dialogs.showCancelMsg("Connecting...")) {
             //connection attempt aborted by user
             engine.setState(new Disconnected(engine));
-         }
+         }*/
       }
    }
 
