@@ -14,42 +14,43 @@ import java.util.Optional;
 
 public class Dialogs
 {
-   private static Alert openAlert = null;
+   //private static Alert openAlert = null;
+   private static final String DIALOG_CSS = "/gui/fxml/dialogs.css";
+   private static final Alert alert = new Alert(Alert.AlertType.INFORMATION);
+   private static final TextInputDialog dialog = new TextInputDialog();
+
+   static {
+
+      dialog.getDialogPane().getStylesheets().setAll(DIALOG_CSS);
+      alert.getDialogPane().getStylesheets().setAll(DIALOG_CSS);
+
+   }
+
 
    public static void closeCancelMsg()
    {
-      Platform.runLater( () -> {
-         if (Dialogs.openAlert != null) {
-            Dialogs.openAlert.close();
-            openAlert = null;
-         }
-      });
+      Platform.runLater(Dialogs.alert::close);
    }
 
    public static boolean showCancelMsg(final String infoMsg)
    {
-      Alert alert = new Alert(Alert.AlertType.INFORMATION);
+      alert.close();
       alert.setTitle("Confirmation");
       alert.setHeaderText(null);
       alert.setContentText(infoMsg);
       alert.getButtonTypes().setAll(ButtonType.CANCEL);
 
-      Dialogs.openAlert = alert;
-
       Optional<ButtonType> result = alert.showAndWait();
 
-      if (result.isPresent() && result.get() == ButtonType.CANCEL) {
-         Dialogs.openAlert = null;
-         return false;
-      } else {
-         return true;
-      }
+      Logger.debug("Alert result == CANCEL? "+(result.get() == ButtonType.CANCEL));
+
+      return !(result.isPresent() && result.get() == ButtonType.CANCEL);
    }
 
    public static void showOkMsg(final String infoMsg)
    {
       Platform.runLater( () -> {
-         Alert alert = new Alert(Alert.AlertType.INFORMATION);
+         alert.close();
          alert.setTitle("Information");
          alert.setHeaderText(null);
          alert.setContentText(infoMsg);
@@ -60,16 +61,18 @@ public class Dialogs
 
    public static String requestPeerIp()
    {
-      TextInputDialog dialog = new TextInputDialog();
+      dialog.close();
       dialog.setTitle("Peer IP");
       dialog.setHeaderText("Enter the IP of the Peer you want to play with");
       dialog.setContentText("Peer IP:");
+      dialog.getEditor().setText(null);
       dialog.getEditor().requestFocus();
 
       Optional<String> ip = dialog.showAndWait();
 
       if(ip.isPresent()) {
          try {
+            //noinspection ResultOfMethodCallIgnored
             InetAddress.getByName(ip.get());
             return ip.get();
          } catch (UnknownHostException e) {
@@ -85,10 +88,11 @@ public class Dialogs
     */
    public static String requestLocalBindIp()
    {
-      TextInputDialog dialog = new TextInputDialog();
+      dialog.close();
       dialog.setTitle("Start as local only client?");
       dialog.setHeaderText("Choose a local unique client number");
       dialog.setContentText("[1..254]:");
+      dialog.getEditor().setText(null);
       dialog.getEditor().requestFocus();
 
       Optional<String> lastOctet = dialog.showAndWait();
