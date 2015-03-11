@@ -1,13 +1,16 @@
 package gui.controller;
 
 
+import javafx.animation.ScaleTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
+import javafx.util.Duration;
 import model.AbstractFleetModel;
 
 import java.io.IOException;
@@ -17,6 +20,7 @@ import java.util.ResourceBundle;
 public abstract class AbstractFleetView extends BorderPane implements Initializable, AbstractFleetModel.ModelUpdateListener
 {
    private static final String FXML_FILE = "/gui/fxml/seagrid.fxml";
+   private static final int FADE_DURATION = 200;
    protected static final int GRID_SIZE = 10;
 
    @FXML
@@ -45,7 +49,6 @@ public abstract class AbstractFleetView extends BorderPane implements Initializa
          Platform.runLater(() -> updatePartialViewOnUi(fleetModel,i,j));
       }
    }
-
 
    @Override
    public void onPartialUpdate(final AbstractFleetModel model, final int i, final int j, final int flag)
@@ -81,6 +84,30 @@ public abstract class AbstractFleetView extends BorderPane implements Initializa
             seaTile.setId(String.valueOf(GRID_SIZE * row + col));
             seaGrid.add(seaTile, row, col);
          }
+      }
+   }
+
+   protected void setTileStyle(final Node tileNode, final String tileStyle)
+   {
+      final ScaleTransition scaleTransition = new ScaleTransition(Duration.millis(FADE_DURATION), tileNode);
+      final String currentNodeStyleClass = tileNode.getStyleClass().get(1);
+
+      if(currentNodeStyleClass.equals("Hit") || currentNodeStyleClass.equals("Ship")){
+         scaleTransition.setToY(0.0);
+         scaleTransition.setOnFinished((e) -> {
+            final ScaleTransition scaleTransition2 = new ScaleTransition(Duration.millis(FADE_DURATION), tileNode);
+            tileNode.getStyleClass().setAll("SeaTile", tileStyle);
+            scaleTransition2.setToY(1.0);
+            scaleTransition2.play();
+         });
+         scaleTransition.play();
+      }else {
+         tileNode.setScaleX(0.0);
+         tileNode.setScaleY(0.0);
+         tileNode.getStyleClass().setAll("SeaTile", tileStyle);
+         scaleTransition.setToX(1.0);
+         scaleTransition.setToY(1.0);
+         scaleTransition.play();
       }
    }
 }

@@ -18,7 +18,7 @@ import java.io.IOException;
 public class MainView extends VBox
 {
    private static final String FXML_FILE = "/gui/fxml/main.fxml";
-   private static final int FADE_DURATION = 500;
+   private static final int FADE_DURATION = 300;
    private final GameEngine gameEngine = GameEngine.getInstance();
    private EnemyFleetView enemyFleetView;
    private FadeTransition fadeTransition;
@@ -99,7 +99,7 @@ public class MainView extends VBox
       enemyFleetView = new EnemyFleetView();
 
       fadeTransition = new FadeTransition(Duration.millis(FADE_DURATION),enemyFleetView);
-      fadeTransition.setDelay(Duration.millis(300));
+      fadeTransition.setDelay(Duration.millis(200));
 
       OwnFleetView ownFleetView = new OwnFleetView();
 

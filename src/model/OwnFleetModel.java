@@ -35,10 +35,11 @@ public class OwnFleetModel extends AbstractFleetModel
             shipsDestroyed++;
             for (int m = 0, ix = ship.getStartI(), jy = ship.getStartJ(); m < ship.getSize(); m++) {
                seaGrid[ix][jy] = Math.abs(gridValue);
+               listener.onPartialUpdate(this, ix - 1, jy - 1, AbstractFleetModel.DESTROYED);
                ix += (ship.getDir() == 0) ? 1 : 0;
                jy += (ship.getDir() != 0) ? 1 : 0;
             }
-            listener.onTotalUpdate(this);
+            //listener.onTotalUpdate(this);
             return new Object[]{DESTROYED, ship};
          } else {
             seaGrid[i + 1][j + 1] = -gridValue;

@@ -1,10 +1,8 @@
 package gui.controller;
 
 import controller.GameEngine;
-import javafx.animation.ScaleTransition;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
-import javafx.util.Duration;
 import model.AbstractFleetModel;
 
 import java.net.URL;
@@ -13,10 +11,6 @@ import java.util.ResourceBundle;
 
 public class EnemyFleetView extends AbstractFleetView
 {
-   private static final int FADE_DURATION = 300;
-   private ScaleTransition scaleTransition;
-   private Node lastClickedNode;
-
    public EnemyFleetView()
    {
       getStyleClass().add("EnemyFleetView");
@@ -60,17 +54,6 @@ public class EnemyFleetView extends AbstractFleetView
    }
 
 
-   private void setTileStyle(final Node tileNode, final String tileStyle)
-   {
-      tileNode.setScaleX(0.0);
-      tileNode.setScaleY(0.0);
-      tileNode.getStyleClass().setAll("SeaTile", tileStyle);
-      scaleTransition = new ScaleTransition(Duration.millis(FADE_DURATION), tileNode);
-      scaleTransition.setToX(1.0);
-      scaleTransition.setToY(1.0);
-      scaleTransition.play();
-   }
-
    private void seaTileHandler(final MouseEvent event)
    {
       int nodeId;
@@ -81,8 +64,6 @@ public class EnemyFleetView extends AbstractFleetView
       } catch (final NumberFormatException e) {
          return;
       }
-
-      lastClickedNode = targetNode;
 
       int i = nodeId % GRID_SIZE;
       int j = nodeId / GRID_SIZE;

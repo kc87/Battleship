@@ -20,22 +20,30 @@ public class OwnFleetView extends AbstractFleetView
       int nodeId = GRID_SIZE * j + i;
       Node node = seaGrid.lookup("#" + nodeId);
 
-      // Just water
-      if (gridValue == 0 || gridValue == AbstractFleetModel.MISS) {
-         node.getStyleClass().setAll("SeaTile", gridValue == 0 ? "Water" : "Miss");
+      if (gridValue == 0) {
+         node.getStyleClass().setAll("SeaTile", "Water");
+         return;
+      }
+
+      if (gridValue == AbstractFleetModel.MISS) {
+         setTileStyle(node, "Miss");
          return;
       }
 
       // Ship is undamaged or destroyed
       if (gridValue > 0) {
          Ship ship = fleetModel.getShips()[gridValue - 1];
-         node.getStyleClass().setAll("SeaTile", ship.isDestroyed() ? "Destroyed" : "Ship");
+         if(ship.isDestroyed()) {
+            setTileStyle(node, "Destroyed");
+         }else{
+            node.getStyleClass().setAll("SeaTile", "Ship");
+         }
          return;
       }
 
       // Ship is partially damaged
       if (gridValue < 0) {
-         node.getStyleClass().setAll("SeaTile", "Hit");
+         setTileStyle(node, "Hit");
       }
    }
 }
