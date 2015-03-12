@@ -16,7 +16,7 @@ public class Playing implements GameState
    @Override
    public void connectPeer()
    {
-      Dialogs.showOkMsg("Already connected to Player: " + engine.getConnectedPeerIp());
+      Dialogs.showOkMsg("Already connected to Player: " + engine.getConnectedPeerIp().get());
    }
 
    @Override
@@ -24,7 +24,7 @@ public class Playing implements GameState
    {
       Message disconnectMsg = new Message();
       disconnectMsg.SUB_TYPE = Message.DISCONNECT;
-      engine.getNetController().sendMessage(disconnectMsg, engine.getConnectedPeerIp());
+      engine.getNetController().sendMessage(disconnectMsg, engine.getConnectedPeerIp().get());
       engine.setConnectedPeerId(null);
       engine.getShotClock().stop();
       engine.setState(new Disconnected(engine));
@@ -42,7 +42,7 @@ public class Playing implements GameState
       Message abortGameMsg = new Message();
       abortGameMsg.TYPE = Message.GAME;
       abortGameMsg.SUB_TYPE = Message.ABORT;
-      engine.getNetController().sendMessage(abortGameMsg, engine.getConnectedPeerIp());
+      engine.getNetController().sendMessage(abortGameMsg, engine.getConnectedPeerIp().get());
       engine.setPlayerEnabled(true);
       engine.getShotClock().stop();
       engine.setState(new PeerReady(engine));

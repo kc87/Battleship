@@ -12,6 +12,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
 import javafx.util.Duration;
 import model.AbstractFleetModel;
+import org.pmw.tinylog.Logger;
 
 import java.io.IOException;
 import java.net.URL;
@@ -34,7 +35,7 @@ public abstract class AbstractFleetView extends BorderPane implements Initializa
       try {
          fxmlLoader.load();
       } catch (IOException e) {
-         e.printStackTrace();
+         Logger.error(e);
       }
    }
 

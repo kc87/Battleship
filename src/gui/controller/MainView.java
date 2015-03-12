@@ -12,6 +12,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
+import org.pmw.tinylog.Logger;
 
 import java.io.IOException;
 
@@ -58,7 +59,7 @@ public class MainView extends VBox
       try {
          fxmlLoader.load();
       } catch (IOException e) {
-         e.printStackTrace();
+         Logger.error(e);
       }
    }
 
@@ -66,11 +67,7 @@ public class MainView extends VBox
    {
       Platform.runLater(() -> {
          stateLabel.setText(gameEngine.getStateName());
-         if(gameEngine.getConnectedPeerIp() != null){
-            peerIpLabel.setText(gameEngine.getConnectedPeerIp());
-         }else {
-            peerIpLabel.setText("N/A");
-         }
+         peerIpLabel.setText(gameEngine.getConnectedPeerIp().orElse("N/A"));
       });
    }
 

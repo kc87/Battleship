@@ -26,7 +26,7 @@ public class PeerReady implements GameState
    {
       Message disconnectMsg = new Message();
       disconnectMsg.SUB_TYPE = Message.DISCONNECT;
-      engine.getNetController().sendMessage(disconnectMsg, engine.getConnectedPeerIp());
+      engine.getNetController().sendMessage(disconnectMsg, engine.getConnectedPeerIp().get());
       engine.setConnectedPeerId(null);
       engine.setState(new Disconnected(engine));
    }
@@ -37,7 +37,7 @@ public class PeerReady implements GameState
       Message newGameMsg = new Message();
       newGameMsg.TYPE = Message.GAME;
       newGameMsg.SUB_TYPE = Message.NEW;
-      engine.getNetController().sendMessage(newGameMsg, engine.getConnectedPeerIp());
+      engine.getNetController().sendMessage(newGameMsg, engine.getConnectedPeerIp().get());
    }
 
    @Override

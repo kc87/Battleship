@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Optional;
+
 public abstract class AbstractFleetModel
 {
    public static final int NUMBER_OF_SHIPS = 10;
@@ -12,11 +14,11 @@ public abstract class AbstractFleetModel
    protected int[][] seaGrid = new int[(DIM + 2)][(DIM + 2)];
    protected Ship[] ships = new Ship[NUMBER_OF_SHIPS];
    protected int shipsDestroyed = 0;
-   protected ModelUpdateListener listener = null;
+   protected Optional<ModelUpdateListener> listener = Optional.empty();
 
    public AbstractFleetModel(final ModelUpdateListener listener)
    {
-      this.listener = listener;
+      this.listener = Optional.ofNullable(listener);
    }
 
    public int getShipsLeft()

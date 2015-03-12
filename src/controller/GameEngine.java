@@ -16,6 +16,7 @@ import net.NetController;
 import net.protocol.Message;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 
 public final class GameEngine implements NetController.Listener, ShotClock.Listener
@@ -26,7 +27,7 @@ public final class GameEngine implements NetController.Listener, ShotClock.Liste
    private NetController netController = null;
    private OwnFleetModel ownFleetModel = null;
    private EnemyFleetModel enemyFleetModel = null;
-   private MainView mainView = null;
+   private Optional<MainView> mainView = Optional.empty();
    private ModelUpdateListener ownFleetModelUpdateListener = null;
    private ModelUpdateListener enemyFleetModelUpdateListener = null;
    private boolean myTurnFlag = false;
@@ -47,7 +48,7 @@ public final class GameEngine implements NetController.Listener, ShotClock.Liste
 
    public void setMainView(final MainView mainView)
    {
-      this.mainView = mainView;
+      this.mainView = Optional.ofNullable(mainView);
    }
 
    public void setModelUpdateListener(final ModelUpdateListener own, final ModelUpdateListener enemy)
@@ -59,10 +60,7 @@ public final class GameEngine implements NetController.Listener, ShotClock.Liste
    public void setState(final GameState newState)
    {
       currentState = newState;
-
-      if(mainView != null) {
-         mainView.updateState();
-      }
+      mainView.ifPresent(MainView::updateState);
    }
 
    public NetController getNetController()
@@ -70,9 +68,9 @@ public final class GameEngine implements NetController.Listener, ShotClock.Liste
       return netController;
    }
 
-   public String getConnectedPeerIp()
+   public Optional<String> getConnectedPeerIp()
    {
-      return (connectedPeerId != null) ? connectedPeerId.split(":")[0] : null;
+      return (connectedPeerId != null) ? Optional.of(connectedPeerId.split(":")[0]) : Optional.<String>empty();
    }
 
    public void setConnectedPeerId(final String newPeerId)
@@ -122,12 +120,12 @@ public final class GameEngine implements NetController.Listener, ShotClock.Liste
 
    public void shoot(final int i, final int j)
    {
-      if(getStateName().equals("Playing")) {
+      if (getStateName().equals("Playing")) {
          Message bombMsg = new Message();
          bombMsg.TYPE = Message.GAME;
          bombMsg.SUB_TYPE = Message.SHOOT;
          bombMsg.PAYLOAD = new Object[]{i, j};
-         netController.sendMessage(bombMsg, getConnectedPeerIp());
+         netController.sendMessage(bombMsg, getConnectedPeerIp().get());
          shotClock.start();
       }
    }
@@ -142,7 +140,7 @@ public final class GameEngine implements NetController.Listener, ShotClock.Liste
                msg.ACK_FLAG = true;
                msg.RST_FLAG = false;
                connectedPeerId = peerId;
-               netController.sendMessage(msg, getConnectedPeerIp());
+               netController.sendMessage(msg, getConnectedPeerIp().get());
                setState(new PeerReady(this));
             }
             break;
@@ -221,7 +219,7 @@ public final class GameEngine implements NetController.Listener, ShotClock.Liste
 
                      if (enemyFleetModel.isFleetDestroyed()) {
                         gotAWinner = true;
-                        mainView.updateScore(ownFleetModel.getShipsLeft(), 0);
+                        mainView.ifPresent(mv -> mv.updateScore(ownFleetModel.getShipsLeft(), 0));
                         //FIXME: should be currentState.finishGame();
                         currentState.abortGame();
                         Dialogs.showOkMsg("You are the Winner!");
@@ -240,11 +238,11 @@ public final class GameEngine implements NetController.Listener, ShotClock.Liste
                      msg.ACK_FLAG = true;
                      msg.PAYLOAD = new Object[]{i, j, resultFlag};
                      msg.SHIP = ship;
-                     netController.sendMessage(msg, getConnectedPeerIp());
+                     netController.sendMessage(msg, getConnectedPeerIp().get());
 
                      if (ownFleetModel.isFleetDestroyed()) {
                         gotAWinner = true;
-                        mainView.updateScore(0, enemyFleetModel.getShipsLeft());
+                        mainView.ifPresent(mv -> mv.updateScore(0, enemyFleetModel.getShipsLeft()));
                         Dialogs.showOkMsg("You lose!");
                         return;
                      }
@@ -253,7 +251,8 @@ public final class GameEngine implements NetController.Listener, ShotClock.Liste
                   }
 
                   if (resultFlag == AbstractFleetModel.DESTROYED) {
-                     mainView.updateScore(ownFleetModel.getShipsLeft(), enemyFleetModel.getShipsLeft());
+                     mainView.ifPresent(mv -> mv.updateScore(ownFleetModel.getShipsLeft(),
+                             enemyFleetModel.getShipsLeft()));
                   }
 
                   setPlayerEnabled(myTurnFlag);
@@ -272,7 +271,7 @@ public final class GameEngine implements NetController.Listener, ShotClock.Liste
       gotAWinner = false;
       ownFleetModel = new OwnFleetModel(ownFleetModelUpdateListener);
       enemyFleetModel = new EnemyFleetModel(enemyFleetModelUpdateListener);
-      mainView.updateScore(AbstractFleetModel.NUMBER_OF_SHIPS, AbstractFleetModel.NUMBER_OF_SHIPS);
+      mainView.ifPresent(mv -> mv.updateScore(AbstractFleetModel.NUMBER_OF_SHIPS, AbstractFleetModel.NUMBER_OF_SHIPS));
       setPlayerEnabled(myTurnFlag);
    }
 
@@ -283,13 +282,13 @@ public final class GameEngine implements NetController.Listener, ShotClock.Liste
       } else {
          shotClock.stop();
       }
-      mainView.enableEnemyView(enable);
+      mainView.ifPresent(mv -> mv.enableEnemyView(enable));
    }
 
    @Override
    public void onTick(final int tick)
    {
-      mainView.updateShotClock(tick);
+      mainView.ifPresent(mv -> mv.updateShotClock(tick));
    }
 
    @Override
@@ -298,7 +297,7 @@ public final class GameEngine implements NetController.Listener, ShotClock.Liste
       Message timeoutMsg = new Message();
       timeoutMsg.TYPE = Message.GAME;
       timeoutMsg.SUB_TYPE = Message.TIMEOUT;
-      netController.sendMessage(timeoutMsg, getConnectedPeerIp());
+      netController.sendMessage(timeoutMsg, getConnectedPeerIp().get());
       setPlayerEnabled(false);
    }
 }

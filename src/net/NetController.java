@@ -14,17 +14,19 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.util.Optional;
 
 public class NetController
 {
+   private static final int SO_TIMEOUT = 500;
    private static final int PORT = 60000;
    private DatagramSocket udpSocket = null;
    private Thread receiverThread = null;
-   private Listener listener = null;
+   private Optional<Listener> listener = Optional.empty();
 
    public NetController(final Listener listener)
    {
-      this.listener = listener;
+      this.listener = Optional.ofNullable(listener);
    }
 
    public void startReceiverThread()
@@ -100,7 +102,7 @@ public class NetController
          jsonMsg = jsonMsg.trim();
          Logger.debug("Rcv.:" + jsonMsg + " from: " + peerId);
          Message newMsg = gson.fromJson(jsonMsg, Message.class);
-         listener.onMessage(newMsg, peerId);
+         listener.ifPresent(l -> l.onMessage(newMsg, peerId));
       } catch (JsonSyntaxException e) {
          Logger.error(e);
       }
@@ -122,7 +124,7 @@ public class NetController
 
          Logger.debug("Bind address is: " + Main.localBindAddress);
 
-         udpSocket.setSoTimeout(500);
+         udpSocket.setSoTimeout(SO_TIMEOUT);
 
       } catch (final SocketException e) {
          Logger.error(e);
