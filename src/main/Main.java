@@ -8,11 +8,13 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.pmw.tinylog.Logger;
 
+import java.util.Optional;
+
 public class Main extends Application
 {
    public static final String TITLE = "P2P Battleship (FX8)";
    public static final String VERSION = "v0.11";
-   public static String localBindAddress = null;
+   public static Optional<String> localBindAddress = Optional.empty();
 
    @Override
    public void init()
@@ -23,9 +25,10 @@ public class Main extends Application
    @Override
    public void start(Stage mainStage) throws Exception
    {
+      Dialogs.init();
       localBindAddress = Dialogs.requestLocalBindIp();
       String title = TITLE + " " + VERSION +
-                    (localBindAddress != null ? " ["+localBindAddress+"]" : "");
+                    (localBindAddress.isPresent() ? " ["+localBindAddress.get()+"]" : "");
 
       GameEngine.getInstance().startNetReceiver();
 

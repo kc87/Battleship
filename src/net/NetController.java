@@ -114,15 +114,15 @@ public class NetController
       try {
          udpSocket = new DatagramSocket(null);
 
-         if (Main.localBindAddress == null) {
+         if (Main.localBindAddress.isPresent()) {
+            // Bind to loopback interface only
+            udpSocket.bind(new InetSocketAddress(Main.localBindAddress.get(), PORT));
+         } else {
             // Bind to all active interfaces
             udpSocket.bind(new InetSocketAddress(PORT));
-         } else {
-            // Bind to loopback interface only
-            udpSocket.bind(new InetSocketAddress(Main.localBindAddress, PORT));
          }
 
-         Logger.debug("Bind address is: " + Main.localBindAddress);
+         Logger.debug("Bind address is: " + Main.localBindAddress.get());
 
          udpSocket.setSoTimeout(SO_TIMEOUT);
 

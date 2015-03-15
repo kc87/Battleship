@@ -14,16 +14,17 @@ import java.util.Optional;
 
 public class Dialogs
 {
-   //private static Alert openAlert = null;
    private static final String DIALOG_CSS = "/gui/fxml/dialogs.css";
-   private static final Alert alert = new Alert(Alert.AlertType.INFORMATION);
-   private static final TextInputDialog dialog = new TextInputDialog();
+   private static Alert alert;
+   private static TextInputDialog dialog;
 
-   static {
+   public static void init()
+   {
+      alert = new Alert(Alert.AlertType.INFORMATION);
+      dialog = new TextInputDialog();
 
       dialog.getDialogPane().getStylesheets().setAll(DIALOG_CSS);
       alert.getDialogPane().getStylesheets().setAll(DIALOG_CSS);
-
    }
 
 
@@ -42,14 +43,14 @@ public class Dialogs
 
       Optional<ButtonType> result = alert.showAndWait();
 
-      Logger.debug("Alert result == CANCEL? "+(result.get() == ButtonType.CANCEL));
+      Logger.debug("Alert result == CANCEL? " + (result.get() == ButtonType.CANCEL));
 
       return !(result.isPresent() && result.get() == ButtonType.CANCEL);
    }
 
    public static void showOkMsg(final String infoMsg)
    {
-      Platform.runLater( () -> {
+      Platform.runLater(() -> {
          alert.close();
          alert.setTitle("Information");
          alert.setHeaderText(null);
@@ -68,25 +69,22 @@ public class Dialogs
       dialog.getEditor().setText(null);
       dialog.getEditor().requestFocus();
 
-      Optional<String> ip = dialog.showAndWait();
-
-      if(ip.isPresent()) {
+      return dialog.showAndWait().map(ip -> {
          try {
             //noinspection ResultOfMethodCallIgnored
-            InetAddress.getByName(ip.get());
-            return ip.get();
+            InetAddress.getByName(ip);
+            return ip;
          } catch (UnknownHostException e) {
             Logger.error(e);
+            return null;
          }
-      }
-
-      return null;
+      }).orElse(null);
    }
 
    /**
     * For testing only!
     */
-   public static String requestLocalBindIp()
+   public static Optional<String> requestLocalBindIp()
    {
       dialog.close();
       dialog.setTitle("Start as local only client?");
@@ -95,20 +93,24 @@ public class Dialogs
       dialog.getEditor().setText(null);
       dialog.getEditor().requestFocus();
 
-      Optional<String> lastOctet = dialog.showAndWait();
+      return getLocalIpFromId(dialog.showAndWait());
+   }
 
-      if (lastOctet.isPresent()) {
-         try {
-            int octet = Integer.parseInt(lastOctet.get());
-            if (octet > 0 && octet < 255) {
-               return "127.0.0." + lastOctet.get();
-            }
-         } catch (NumberFormatException e) {
-            /* IGNORED */
-         }
+
+   public static Optional<String> getLocalIpFromId(final Optional<String> localId)
+   {
+      return localId.flatMap(Dialogs::stringToInt)
+              .filter(id -> (id > 0 && id < 255))
+              .map(id -> "127.0.0." + String.valueOf(id));
+   }
+
+   private static Optional<Integer> stringToInt(final String str)
+   {
+      try {
+         return Optional.of(Integer.parseInt(str));
+      } catch (NumberFormatException e) {
+         return Optional.empty();
       }
-
-      return null;
    }
 
 }
