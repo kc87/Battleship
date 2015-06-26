@@ -1,4 +1,4 @@
-# Battleship (FX8)
+# Battleship (FX8) [![Build Status](https://api.travis-ci.org/kc87/Battleship.svg)](https://travis-ci.org/kc87/BattleShip)
 Simple P2P [Battleship Game](http://en.wikipedia.org/wiki/Battleship_%28game%29) using **JavaFX 8**
 
 
